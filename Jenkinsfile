@@ -13,7 +13,7 @@ build('image-inspector', 'docker-host') {
   pipeDefault() {
     runStage('fetch submodules') {
       withGithubPrivkey {
-        sh 'make wc_compile'
+        sh 'make submodules'
       }
     }
 
