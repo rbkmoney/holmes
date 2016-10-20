@@ -25,7 +25,6 @@ CALL_W_CONTAINER := $(CALL_ANYWHERE)
 
 all: submodules
 
--include $(UTILS_PATH)/make_lib/utils_container.mk
 -include $(UTILS_PATH)/make_lib/utils_image.mk
 
 $(SUBTARGETS): %/.git: %
