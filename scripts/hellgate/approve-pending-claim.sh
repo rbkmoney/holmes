@@ -2,7 +2,7 @@
 
 set -e -o pipefail
 
-PARTY_ID="'"${1}"'"
+PARTY_ID="\"${1}\""
 shift 1
 
 SCHEMA="damsel/proto/payment_processing.thrift"
