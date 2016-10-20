@@ -2,7 +2,7 @@
 cat <<EOF
 FROM $BASE_IMAGE
 MAINTAINER Igor Savchuk <i.savchuk@rbkmoney.com>
-COPY ./damsel /opt/inspector/damsel
+COPY ./damsel/proto /opt/inspector/damsel/proto
 COPY ./scripts /opt/inspector/scripts
 CMD /sbin/init
 # A bit of magic below to get a proper branch name

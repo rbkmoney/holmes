@@ -11,6 +11,12 @@ build('image-inspector', 'docker-host') {
   }
 
   pipeDefault() {
+    runStage('fetch submodules') {
+      withGithubPrivkey {
+        sh 'make submodules'
+      }
+    }
+
     runStage('build image') {
       sh 'make build_image'
     }
