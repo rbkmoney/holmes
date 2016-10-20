@@ -11,6 +11,10 @@ build('image-inspector', 'docker-host') {
   }
 
   pipeDefault() {
+    runStage('fetch submodules') {
+      sh 'make submodules'
+    }
+
     runStage('build image') {
       sh 'make build_image'
     }
