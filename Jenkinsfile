@@ -1,6 +1,6 @@
 #!groovy
 
-build('image-inspector', 'docker-host', finalHook) {
+build('image-inspector', 'docker-host') {
   checkoutRepo()
   loadBuildUtils()
 
