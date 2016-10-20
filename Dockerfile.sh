@@ -3,6 +3,7 @@ cat <<EOF
 FROM $BASE_IMAGE
 MAINTAINER Igor Savchuk <i.savchuk@rbkmoney.com>
 COPY ./damsel /opt/inspector/damsel
+COPY ./scripts /opt/inspector/scripts
 CMD /sbin/init
 # A bit of magic below to get a proper branch name
 # even when the HEAD is detached (Hey Jenkins!
