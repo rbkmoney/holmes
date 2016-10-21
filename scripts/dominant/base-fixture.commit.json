@@ -92,7 +92,8 @@
         "ref": {"id": 1},
         "data": {
             "name": "Categories",
-            "description": "Goods sold by category providers"
+            "description": "Goods sold by category providers",
+            "type": "test"
         }
     }}}},
     {"insert": {"object": {"provider": {
