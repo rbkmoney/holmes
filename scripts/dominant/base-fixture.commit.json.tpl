@@ -111,7 +111,7 @@
         "data": {
             "name": "Brovider",
             "description": "A provider but bro",
-            "terminal": {"value": [{"id": 1}]},
+            "terminal": {"value": [{"id": 1}, {"id": 2}]},
             "proxy": {
                 "ref": {"id": 1},
                 "additional": {"override": "Brovider"}
@@ -123,7 +123,7 @@
         "data": {
             "name": "Drovider",
             "description": "Well, a drovider",
-            "terminal": {"value": [{"id": 2}]},
+            "terminal": {"value": [{"id": 3}]},
             "proxy": {
                 "ref": {"id": 2},
                 "additional": {"override": "Drovider"}
@@ -162,6 +162,33 @@
         "data": {
             "name": "Brominal 2",
             "description": "Brominal 2",
+            "payment_method": {"id": {"bank_card": "mastercard"}},
+            "category": {"id": 1},
+            "cash_flow": [
+                {
+                    "source": {"party": "provider", "designation": "receipt"},
+                    "destination": {"party": "merchant", "designation": "general"},
+                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                },
+                {
+                    "source": {"party": "system", "designation": "compensation"},
+                    "destination": {"party": "provider", "designation": "compensation"},
+                    "volume": {"share": {"parts": {"p": 17, "q": 1000}, "of": "payment_amount"}}
+                }
+            ],
+            "accounts": {
+                "currency": {"symbolic_code": "RUB"},
+                "receipt": $(${CURDIR}/create-account.sh RUB $*),
+                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+            },
+            "options": {"override": "Brominal 2"}
+        }
+    }}}},
+    {"insert": {"object": {"terminal": {
+        "ref": {"id": 3},
+        "data": {
+            "name": "Drominal 1",
+            "description": "Drominal 1",
             "payment_method": {"id": {"bank_card": "nspkmir"}},
             "category": {"id": 1},
             "cash_flow": [
@@ -173,7 +200,7 @@
                 {
                     "source": {"party": "system", "designation": "compensation"},
                     "destination": {"party": "provider", "designation": "compensation"},
-                    "volume": {"share": {"parts": {"p": 14, "q": 1000}, "of": "payment_amount"}}
+                    "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
             "accounts": {
@@ -181,20 +208,20 @@
                 "receipt": $(${CURDIR}/create-account.sh RUB $*),
                 "compensation": $(${CURDIR}/create-account.sh RUB $*)
             },
-            "options": {"override": "Brominal 2"}
+            "options": {"override": "Drominal 1"}
         }
     }}}},
     {"insert": {"object": {"proxy": {
         "ref": {"id": 1},
         "data": {
-            "url": "http://tinkoff-proxy:8022/proxy/tinkoff",
+            "url": "http://proxy-tinkoff:8022/proxy/tinkoff",
             "options": []
         }
     }}}},
     {"insert": {"object": {"proxy": {
         "ref": {"id": 2},
         "data": {
-            "url": "http://vtb-proxy:8022/proxy/vtb",
+            "url": "http://proxy-vtb:8022/proxy/vtb",
             "options": []
         }
     }}}}
