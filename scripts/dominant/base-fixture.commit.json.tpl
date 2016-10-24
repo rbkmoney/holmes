@@ -4,7 +4,16 @@
         "data": {
             "party_prototype": {"id": 42},
             "providers": {"value": [{"id": 1}]},
-            "system_accounts": {"predicates": []}
+            "system_accounts": {"value": [{"id": 1}]}
+        }
+    }}}},
+    {"insert": {"object": {"system_account_set": {
+        "ref": {"id": 1},
+        "data": {
+            "name": "Primary",
+            "description": "Primary",
+            "currency": {"symbolic_code": "RUB"},
+            "compensation": $(${CURDIR}/create-account.sh RUB $*)
         }
     }}}},
     {"insert": {"object": {"party_prototype": {
@@ -127,7 +136,11 @@
                     "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
-            "accounts": {"currency": {"symbolic_code": "RUB"}, "receipt": 10, "compensation": 11},
+            "accounts": {
+                "currency": {"symbolic_code": "RUB"},
+                "receipt": $(${CURDIR}/create-account.sh RUB $*),
+                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+            },
             "options": {"override": "Brominal 1"}
         }
     }}}},
