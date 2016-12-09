@@ -1,9 +1,9 @@
 #!/bin/sh
 
-KEY="\"#{0}\""
+KEY=${1}
 shift 1
 
 woorl $* \
     -s damsel/proto/cds.thrift \
     http://cds:8022/v1/keyring \
-    Keyring Unlock ${KEY}
+    Keyring Unlock "${KEY}"
