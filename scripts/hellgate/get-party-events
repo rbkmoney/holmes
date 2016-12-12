@@ -9,12 +9,14 @@ get_events () {
 
 case "$1" in
     -h|--help )
-        echo -e "Usage: get-invoice-events user_id party_id after limit"
-        echo -e "  user_id         user id"
-        echo -e "  party_id        party id"
-        echo -e "  after           event id after which we want to get events"
-        echo -e "  limit           limit of events"
+        NAME=`basename $0`
+        echo -e "Usage: $NAME user_id party_id after limit [woorl_opts]"
+        echo -e "  user_id         user id (string)"
+        echo -e "  party_id        party id (string)"
+        echo -e "  after           event id after which we want to get events (integer)"
+        echo -e "  limit           limit of events (integer)"
         echo -e "  -h, --help      help"
+        echo -e "  more information: https://github.com/rbkmoney/damsel"
         exit 0
     * )
         USER="{\"id\":\"$1\"}"

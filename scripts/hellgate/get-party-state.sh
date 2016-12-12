@@ -9,10 +9,12 @@ get_party () {
 
 case "$1" in
     -h|--help )
-        echo -e "Usage: get-party-state user_id party_id"
-        echo -e "  user_id         user id"
-        echo -e "  party_id        party id"
+        NAME=`basename $0`
+        echo -e "Usage: $NAME user_id party_id [woorl_opts]"
+        echo -e "  user_id         user id (string)"
+        echo -e "  party_id        party id (string)"
         echo -e "  -h, --help      help"
+        echo -e "  more information: https://github.com/rbkmoney/damsel"
         exit 0
     * )
         USER="{\"id\":\"$1\"}"

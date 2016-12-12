@@ -10,9 +10,11 @@ unlock_keyring () {
 
 case "$1" in
     -h|--help )
-        echo -e "Usage: unlock-keyring key"
-        echo -e "  key             part of master key for keyring unlock"
+        NAME=`basename $0`
+        echo -e "Usage: $NAME key [woorl_opts]"
+        echo -e "  key             part of master key for keyring unlock (string)"
         echo -e "  -h, --help      help"
+        echo -e "  more information: https://github.com/rbkmoney/damsel"
         exit 0
         ;;
     * )
