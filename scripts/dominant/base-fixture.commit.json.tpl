@@ -20,7 +20,7 @@
         "ref": {"id": 42},
         "data": {
             "shop": {
-                "category": {"id": 1},
+                "category": {"id": 2},
                 "currency": {"symbolic_code": "RUB"},
                 "details": {"name": "SUPER DEFAULT SHOP"}
             },
@@ -110,7 +110,7 @@
         "ref": {"id": 2},
         "data": {
             "name": "Integration test category",
-            "description": "Goods sold by category providers",
+            "description": "Goods sold by intergration providers",
             "type": "test"
         }
     }}}},
@@ -146,7 +146,7 @@
             "terminal": {"value": [{"id": 4}, {"id": 5}, {"id": 6}]},
             "proxy": {
                 "ref": {"id": 3},
-                "additional": {}
+                "additional": {"override": "Drovider"}
             }
         }
     }}}},
@@ -255,7 +255,7 @@
                 "receipt": $(${CURDIR}/create-account.sh RUB $*),
                 "compensation": $(${CURDIR}/create-account.sh RUB $*)
             },
-            "options": {}
+            "options": {"override": "Drominal 4"}
         }
     }}}},
     {"insert": {"object": {"terminal": {
@@ -282,7 +282,7 @@
                 "receipt": $(${CURDIR}/create-account.sh RUB $*),
                 "compensation": $(${CURDIR}/create-account.sh RUB $*)
             },
-            "options": {}
+            "options": {"override": "Drominal 5"}
         }
     }}}},
     {"insert": {"object": {"terminal": {
@@ -309,7 +309,7 @@
                 "receipt": $(${CURDIR}/create-account.sh RUB $*),
                 "compensation": $(${CURDIR}/create-account.sh RUB $*)
             },
-            "options": {}
+            "options": {"override": "Drominal 6"}
         }
     }}}},
     {"insert": {"object": {"proxy": {
