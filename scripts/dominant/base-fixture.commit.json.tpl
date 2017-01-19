@@ -1,21 +1,45 @@
 {"ops": [
+
     {"insert": {"object": {"globals": {
         "ref": {},
         "data": {
             "party_prototype": {"id": 42},
             "providers": {"value": [{"id": 1}, {"id": 2}, {"id": 3}]},
-            "system_accounts": {"value": [{"id": 1}]}
+            "system_account_set": {"value": {"id": 1}},
+            "external_account_set": {"value": {"id": 1}},
+            "default_contract_template": {"id": 1},
+            "inspector": {"id": 1},
+            "common_merchant_proxy": {"id": 1000}
         }
     }}}},
+
     {"insert": {"object": {"system_account_set": {
         "ref": {"id": 1},
         "data": {
             "name": "Primary",
             "description": "Primary",
-            "currency": {"symbolic_code": "RUB"},
-            "compensation": $(${CURDIR}/create-account.sh RUB $*)
+            "accounts": [
+                {"key": {"symbolic_code": "RUB"}, "value": {
+                    "settlement": $(${CURDIR}/create-account.sh RUB $*)
+                }}
+            ]
         }
     }}}},
+
+    {"insert": {"object": {"external_account_set": {
+        "ref": {"id": 1},
+        "data": {
+            "name": "Primary",
+            "description": "Primary",
+            "accounts": [
+                {"key": {"symbolic_code": "RUB"}, "value": {
+                    "income": $(${CURDIR}/create-account.sh RUB $*),
+                    "outcome": $(${CURDIR}/create-account.sh RUB $*)
+                }}
+            ]
+        }
+    }}}},
+
     {"insert": {"object": {"party_prototype": {
         "ref": {"id": 42},
         "data": {
@@ -24,62 +48,77 @@
                 "currency": {"symbolic_code": "RUB"},
                 "details": {"name": "SUPER DEFAULT SHOP"}
             },
-            "default_services": {
-                "payments": {
-                    "domain_revision": 0,
-                    "terms": {"id": 1}
-                }
+            "test_contract_template": {"id": 1}
+        }
+    }}}},
+
+    {"insert": {"object": {"inspector": {
+        "ref": {"id": 1},
+        "data": {
+            "name": "Kovalsky",
+            "description": "World famous inspector Kovalsky at your service!",
+            "proxy": {
+                "ref": {"id": 100},
+                "additional": {}
             }
         }
     }}}},
-    {"insert": {"object": {"payments_service_terms": {
+
+    {"insert": {"object": {"term_set_hierarchy": {
         "ref": {"id": 1},
         "data": {
-            "payment_methods": {"value": [
-                {"id": {"bank_card": "visa"}},
-                {"id": {"bank_card": "mastercard"}},
-                {"id": {"bank_card": "nspkmir"}}
-            ]},
-            "limits": {"predicates": [
+            "term_sets": [
                 {
-                    "if_": {"condition": {"currency_is": {"symbolic_code": "RUB"}}},
-                    "then_": {"value": {
-                        "min": {"inclusive": 1000},
-                        "max": {"exclusive": 4200000}
-                    }}
-                },
-                {
-                    "if_": {"condition": {"currency_is": {"symbolic_code": "USD"}}},
-                    "then_": {"value": {
-                        "min": {"inclusive": 200},
-                        "max": {"exclusive": 313370}
-                    }}
-                }
-            ]},
-            "fees": {"predicates": [
-                {
-                    "if_": {"condition": {"currency_is": {"symbolic_code": "RUB"}}},
-                    "then_": {"value": [
-                        {
-                            "source": {"party": "merchant", "designation": "general"},
-                            "destination": {"party": "system", "designation": "compensation"},
-                            "volume": {"share": {"parts": {"p": 45, "q": 1000}, "of": "payment_amount"}}
+                    "action_time": {},
+                    "terms": {
+                        "payments": {
+                            "currencies": {"value": [
+                                {"symbolic_code": "RUB"}
+                            ]},
+                            "categories": {"value": [
+                                {"id": 1},
+                                {"id": 2}
+                            ]},
+                            "payment_methods": {"value": [
+                                {"id": {"bank_card": "visa"}},
+                                {"id": {"bank_card": "mastercard"}},
+                                {"id": {"bank_card": "nspkmir"}}
+                            ]},
+                            "cash_limit": {"decisions": [
+                                {
+                                    "if_": {"condition": {"currency_is": {"symbolic_code": "RUB"}}},
+                                    "then_": {"value": {
+                                        "min": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
+                                        "max": {"exclusive": {"amount": 4200000, "currency": {"symbolic_code": "RUB"}}}
+                                    }}
+                                }
+                            ]},
+                            "fees": {"decisions": [
+                                {
+                                    "if_": {"condition": {"currency_is": {"symbolic_code": "RUB"}}},
+                                    "then_": {"value": [
+                                        {
+                                            "source": {"merchant": "settlement"},
+                                            "destination": {"system": "settlement"},
+                                            "volume": {"share": {"parts": {"p": 45, "q": 1000}, "of": "payment_amount"}}
+                                        }
+                                    ]}
+                                }
+                            ]}
                         }
-                    ]}
-                },
-                {
-                    "if_": {"condition": {"currency_is": {"symbolic_code": "USD"}}},
-                    "then_": {"value": [
-                        {
-                            "source": {"party": "merchant", "designation": "general"},
-                            "destination": {"party": "system", "designation": "compensation"},
-                            "volume": {"share": {"parts": {"p": 65, "q": 1000}, "of": "payment_amount"}}
-                        }
-                    ]}
+                    }
                 }
-            ]}
+            ]
         }
     }}}},
+
+    {"insert": {"object": {"contract_template": {
+        "ref": {"id": 1},
+        "data": {
+            "terms": {"id": 1}
+        }
+    }}}},
+
     {"insert": {"object": {"currency": {
         "ref": {"symbolic_code": "RUB"},
         "data": {
@@ -89,15 +128,7 @@
             "exponent": 2
         }
     }}}},
-    {"insert": {"object": {"currency": {
-        "ref": {"symbolic_code": "USD"},
-        "data": {
-            "name": "US Dollars",
-            "numeric_code": 840,
-            "symbolic_code": "USD",
-            "exponent": 2
-        }
-    }}}},
+
     {"insert": {"object": {"category": {
         "ref": {"id": 1},
         "data": {
@@ -106,6 +137,7 @@
             "type": "test"
         }
     }}}},
+
     {"insert": {"object": {"category": {
         "ref": {"id": 2},
         "data": {
@@ -114,6 +146,39 @@
             "type": "test"
         }
     }}}},
+
+    {"insert": {"object": {"payment_method": {
+        "ref": {"id": {"bank_card": "visa"}},
+        "data": {
+            "name": "VISA",
+            "description": "VISA bank cards"
+        }
+    }}}},
+
+    {"insert": {"object": {"payment_method": {
+        "ref": {"id": {"bank_card": "mastercard"}},
+        "data": {
+            "name": "Mastercard",
+            "description": "Mastercard bank cards"
+        }
+    }}}},
+
+    {"insert": {"object": {"payment_method": {
+        "ref": {"id": {"bank_card": "maestro"}},
+        "data": {
+            "name": "Maestro",
+            "description": "Maestro bank cards"
+        }
+    }}}},
+
+    {"insert": {"object": {"payment_method": {
+        "ref": {"id": {"bank_card": "nspkmir"}},
+        "data": {
+            "name": "НСПК Мир",
+            "description": "НСПК Мир"
+        }
+    }}}},
+
     {"insert": {"object": {"provider": {
         "ref": {"id": 1},
         "data": {
@@ -123,9 +188,11 @@
             "proxy": {
                 "ref": {"id": 1},
                 "additional": {"override": "Brovider"}
-            }
+            },
+            "abs_account": "0000000001"
         }
     }}}},
+
     {"insert": {"object": {"provider": {
         "ref": {"id": 2},
         "data": {
@@ -135,9 +202,11 @@
             "proxy": {
                 "ref": {"id": 2},
                 "additional": {"override": "Drovider"}
-            }
+            },
+            "abs_account": "0000000002"
         }
     }}}},
+
     {"insert": {"object": {"provider": {
         "ref": {"id": 3},
         "data": {
@@ -147,9 +216,11 @@
             "proxy": {
                 "ref": {"id": 3},
                 "additional": {"override": "Drovider"}
-            }
+            },
+            "abs_account": "0000000003"
         }
     }}}},
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 1},
         "data": {
@@ -157,26 +228,27 @@
             "description": "Brominal 1",
             "payment_method": {"id": {"bank_card": "visa"}},
             "category": {"id": 1},
+            "risk_coverage": "high",
             "cash_flow": [
                 {
-                    "source": {"party": "provider", "designation": "receipt"},
-                    "destination": {"party": "merchant", "designation": "general"},
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
                     "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
                 },
                 {
-                    "source": {"party": "system", "designation": "compensation"},
-                    "destination": {"party": "provider", "designation": "compensation"},
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
                     "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
-            "accounts": {
+            "account": {
                 "currency": {"symbolic_code": "RUB"},
-                "receipt": $(${CURDIR}/create-account.sh RUB $*),
-                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "options": {"override": "Brominal 1"}
         }
     }}}},
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 2},
         "data": {
@@ -184,26 +256,27 @@
             "description": "Brominal 2",
             "payment_method": {"id": {"bank_card": "mastercard"}},
             "category": {"id": 1},
+            "risk_coverage": "high",
             "cash_flow": [
                 {
-                    "source": {"party": "provider", "designation": "receipt"},
-                    "destination": {"party": "merchant", "designation": "general"},
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
                     "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
                 },
                 {
-                    "source": {"party": "system", "designation": "compensation"},
-                    "destination": {"party": "provider", "designation": "compensation"},
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
                     "volume": {"share": {"parts": {"p": 17, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
-            "accounts": {
+            "account": {
                 "currency": {"symbolic_code": "RUB"},
-                "receipt": $(${CURDIR}/create-account.sh RUB $*),
-                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "options": {"override": "Brominal 2"}
         }
     }}}},
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 3},
         "data": {
@@ -211,26 +284,27 @@
             "description": "Drominal 1",
             "payment_method": {"id": {"bank_card": "nspkmir"}},
             "category": {"id": 1},
+            "risk_coverage": "high",
             "cash_flow": [
                 {
-                    "source": {"party": "provider", "designation": "receipt"},
-                    "destination": {"party": "merchant", "designation": "general"},
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
                     "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
                 },
                 {
-                    "source": {"party": "system", "designation": "compensation"},
-                    "destination": {"party": "provider", "designation": "compensation"},
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
                     "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
-            "accounts": {
+            "account": {
                 "currency": {"symbolic_code": "RUB"},
-                "receipt": $(${CURDIR}/create-account.sh RUB $*),
-                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "options": {"override": "Drominal 1"}
         }
     }}}},
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 4},
         "data": {
@@ -238,26 +312,27 @@
             "description": "Drominal 4",
             "payment_method": {"id": {"bank_card": "visa"}},
             "category": {"id": 2},
+            "risk_coverage": "high",
             "cash_flow": [
                 {
-                    "source": {"party": "provider", "designation": "receipt"},
-                    "destination": {"party": "merchant", "designation": "general"},
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
                     "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
                 },
                 {
-                    "source": {"party": "system", "designation": "compensation"},
-                    "destination": {"party": "provider", "designation": "compensation"},
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
                     "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
-            "accounts": {
+            "account": {
                 "currency": {"symbolic_code": "RUB"},
-                "receipt": $(${CURDIR}/create-account.sh RUB $*),
-                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "options": {"override": "Drominal 4"}
         }
     }}}},
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 5},
         "data": {
@@ -265,26 +340,27 @@
             "description": "Drominal 5",
             "payment_method": {"id": {"bank_card": "mastercard"}},
             "category": {"id": 2},
+            "risk_coverage": "high",
             "cash_flow": [
                 {
-                    "source": {"party": "provider", "designation": "receipt"},
-                    "destination": {"party": "merchant", "designation": "general"},
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
                     "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
                 },
                 {
-                    "source": {"party": "system", "designation": "compensation"},
-                    "destination": {"party": "provider", "designation": "compensation"},
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
                     "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
-            "accounts": {
+            "account": {
                 "currency": {"symbolic_code": "RUB"},
-                "receipt": $(${CURDIR}/create-account.sh RUB $*),
-                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "options": {"override": "Drominal 5"}
         }
     }}}},
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 6},
         "data": {
@@ -292,45 +368,75 @@
             "description": "Drominal 6",
             "payment_method": {"id": {"bank_card": "maestro"}},
             "category": {"id": 2},
+            "risk_coverage": "high",
             "cash_flow": [
                 {
-                    "source": {"party": "provider", "designation": "receipt"},
-                    "destination": {"party": "merchant", "designation": "general"},
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
                     "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
                 },
                 {
-                    "source": {"party": "system", "designation": "compensation"},
-                    "destination": {"party": "provider", "designation": "compensation"},
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
                     "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
                 }
             ],
-            "accounts": {
+            "account": {
                 "currency": {"symbolic_code": "RUB"},
-                "receipt": $(${CURDIR}/create-account.sh RUB $*),
-                "compensation": $(${CURDIR}/create-account.sh RUB $*)
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "options": {"override": "Drominal 6"}
         }
     }}}},
+
     {"insert": {"object": {"proxy": {
         "ref": {"id": 1},
         "data": {
+            "name": "TCS Bank Proxy",
+            "description": "TCS Bank Proxy",
             "url": "http://proxy-tinkoff:8022/proxy/tinkoff",
-            "options": []
+            "options": {}
         }
     }}}},
+
     {"insert": {"object": {"proxy": {
         "ref": {"id": 2},
         "data": {
+            "name": "VTB24 Bank Proxy",
+            "description": "VTB24 Bank Proxy",
             "url": "http://proxy-vtb:8022/proxy/vtb",
-            "options": []
+            "options": {}
         }
     }}}},
+
     {"insert": {"object": {"proxy": {
         "ref": {"id": 3},
         "data": {
+            "name": "Mocketbank Proxy",
+            "description": "Mocked bank proxy for integration test purposes",
             "url": "http://proxy-mocketbank:8022/proxy/mocketbank",
-            "options": []
+            "options": {}
+        }
+    }}}},
+
+    {"insert": {"object": {"proxy": {
+        "ref": {"id": 100},
+        "data": {
+            "name": "Mocket Inspector Proxy",
+            "description": "Mocked inspector proxy for integration test purposes",
+            "url": "http://proxy-mocket-inspector:8022/proxy/mocket/inspector",
+            "options": {"risk_score": "high"}
+        }
+    }}}},
+
+    {"insert": {"object": {"proxy": {
+        "ref": {"id": 1000},
+        "data": {
+            "name": "PIMP",
+            "description": "Common Merchant Proxy",
+            "url": "http://proxy-pimp:8022/hg",
+            "options": {}
         }
     }}}}
+
 ]}
