@@ -1,6 +1,6 @@
 #!groovy
 
-build('image-inspector', 'docker-host') {
+build('image-holmes', 'docker-host') {
   checkoutRepo()
   loadBuildUtils()
 

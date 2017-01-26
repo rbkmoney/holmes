@@ -2,8 +2,8 @@
 cat <<EOF
 FROM $BASE_IMAGE
 MAINTAINER Igor Savchuk <i.savchuk@rbkmoney.com>
-COPY ./damsel/proto /opt/inspector/damsel/proto
-COPY ./scripts /opt/inspector/scripts
+COPY ./damsel/proto /opt/holmes/damsel/proto
+COPY ./scripts /opt/holmes/scripts
 CMD /sbin/init
 # A bit of magic below to get a proper branch name
 # even when the HEAD is detached (Hey Jenkins!
@@ -22,5 +22,5 @@ LABEL com.rbkmoney.$SERVICE_NAME.parent=$BASE_IMAGE_NAME \
         else \
           echo $(git name-rev --name-only HEAD); \
         fi)
-WORKDIR /opt/inspector
+WORKDIR /opt/holmes
 EOF
