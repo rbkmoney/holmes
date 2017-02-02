@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPTNAME=$(basename $0)
+
 get_state () {
     woorl $3 \
         -s damsel/proto/payment_processing.thrift \
@@ -8,17 +10,21 @@ get_state () {
 }
 
 case "$1" in
-    -h|--help )
-        NAME=`basename $0`
-        echo -e "Usage: $NAME user_id invoice_id [woorl_opts]"
-        echo -e "  user_id         user id (string)"
-        echo -e "  invoice_id      invoice id (string)"
-        echo -e "  -h, --help      help"
-        echo -e "  more information: https://github.com/rbkmoney/damsel"
+    ""|"-h"|"--help" )
+        echo -e "Fetch state of an invoice given its ID."
+        echo
+        echo -e "Usage: ${SCRIPTNAME} invoice_id [woorl_opts]"
+        echo -e "  invoice_id      Invoice ID (string)."
+        echo -e "  -h, --help      Show this help message."
+        echo
+        echo -e "More information:"
+        echo -e "  https://github.com/rbkmoney/damsel/blob/a603319/proto/payment_processing.thrift"
         exit 0
+        ;;
     * )
-        USER="{\"id\":\"$1\"}"
-        ID="\"$2\""
-        shift 2
-        get_state "$USER" "$ID" "$*"
+        USERINFO="{\"id\":\"${SCRIPTNAME}\",\"type\":{\"service_user\":{}}}"
+        INVOICE_ID="\"$1\""
+        shift 1
+        get_state "$USERINFO" "$INVOICE_ID" "$*"
+        ;;
 esac
