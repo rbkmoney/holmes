@@ -7,8 +7,8 @@
             "providers": {"value": [{"id": 1}, {"id": 2}, {"id": 3}]},
             "system_account_set": {"value": {"id": 1}},
             "external_account_set": {"value": {"id": 1}},
+            "inspector": {"value": {"id": 1}},
             "default_contract_template": {"id": 1},
-            "inspector": {"id": 1},
             "common_merchant_proxy": {"id": 1000}
         }
     }}}},
@@ -88,8 +88,8 @@
                                 {
                                     "if_": {"condition": {"currency_is": {"symbolic_code": "RUB"}}},
                                     "then_": {"value": {
-                                        "min": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
-                                        "max": {"exclusive": {"amount": 4200000, "currency": {"symbolic_code": "RUB"}}}
+                                        "lower": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
+                                        "upper": {"exclusive": {"amount": 4200000, "currency": {"symbolic_code": "RUB"}}}
                                     }}
                                 }
                             ]},
