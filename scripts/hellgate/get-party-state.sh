@@ -11,10 +11,14 @@ get_party () {
 
 case "$1" in
     ""|"-h"|"--help" )
+        echo -e "Fetch state of a party given its ID."
+        echo
         echo -e "Usage: ${SCRIPTNAME} party_id [woorl_opts]"
-        echo -e "  party_id        party id (string)"
-        echo -e "  -h, --help      help"
-        echo -e "  more information: https://github.com/rbkmoney/damsel"
+        echo -e "  party_id        Party ID (string)."
+        echo -e "  -h, --help      Show this help message."
+        echo
+        echo -e "More information:"
+        echo -e "  https://github.com/rbkmoney/damsel/blob/a603319/proto/payment_processing.thrift"
         exit 0
         ;;
     * )

@@ -18,10 +18,14 @@ accept_claim() {
 
 case "$1" in
     ""|"-h"|"--help" )
+        echo -e "Given ID of a party accept its pending claim if there is one."
+        echo
         echo -e "Usage: ${SCRIPTNAME} party_id [woorl_opts]"
         echo -e "  party_id        The ID of a party whose claim to accept"
         echo -e "  -h, --help      Help"
-        echo -e "  more information: https://github.com/rbkmoney/damsel"
+        echo
+        echo -e "More information:"
+        echo -e "  https://github.com/rbkmoney/damsel/blob/a603319/proto/payment_processing.thrift"
         exit 0
         ;;
     * )

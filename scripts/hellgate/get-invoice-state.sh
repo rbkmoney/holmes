@@ -11,10 +11,14 @@ get_state () {
 
 case "$1" in
     ""|"-h"|"--help" )
+        echo -e "Fetch state of an invoice given its ID."
+        echo
         echo -e "Usage: ${SCRIPTNAME} invoice_id [woorl_opts]"
-        echo -e "  invoice_id      invoice id (string)"
-        echo -e "  -h, --help      help"
-        echo -e "  more information: https://github.com/rbkmoney/damsel"
+        echo -e "  invoice_id      Invoice ID (string)."
+        echo -e "  -h, --help      Show this help message."
+        echo
+        echo -e "More information:"
+        echo -e "  https://github.com/rbkmoney/damsel/blob/a603319/proto/payment_processing.thrift"
         exit 0
         ;;
     * )
