@@ -5,7 +5,7 @@ SCRIPTNAME=$(basename $0)
 get_events () {
     woorl $4 \
         -s damsel/proto/payment_processing.thrift \
-        http://hellgate:8022/v1/processing/invoicing \
+        http://${HELLGATE}:${THRIFT_PORT}/v1/processing/invoicing \
         Invoicing GetEvents $1 $2 $3
 }
 

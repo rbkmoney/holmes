@@ -3,7 +3,7 @@
 SCRIPTNAME=$(basename $0)
 
 SCHEMA="damsel/proto/payment_processing.thrift"
-ENDPOINT="http://hellgate:8022/v1/processing/partymgmt"
+ENDPOINT="http://${HELLGATE}:${THRIFT_PORT}/v1/processing/partymgmt"
 
 get_pending_claim() {
     CLAIM=$(woorl $3 -s "${SCHEMA}" "${ENDPOINT}" PartyManagement GetPendingClaim "$1" "$2")

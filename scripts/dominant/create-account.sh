@@ -7,5 +7,5 @@ shift 1
 
 woorl $* \
     -s damsel/proto/accounter.thrift \
-    http://shumway:8022/accounter \
+    http://${SHUMWAY}:${THRIFT_PORT}/accounter \
     Accounter CreateAccount "{\"currency_sym_code\":\"${CURRENCY}\"}"
