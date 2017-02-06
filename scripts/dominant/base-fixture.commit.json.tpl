@@ -424,7 +424,7 @@
         "data": {
             "name": "Mocket Inspector Proxy",
             "description": "Mocked inspector proxy for integration test purposes",
-            "url": "http://${PROXY_MOCKET_INSPECTOR}:{THRIFT_PORT}/proxy/mocket/inspector",
+            "url": "http://${PROXY_MOCKET_INSPECTOR}:${THRIFT_PORT}/proxy/mocket/inspector",
             "options": {"risk_score": "high"}
         }
     }}}},
