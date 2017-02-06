@@ -394,7 +394,7 @@
         "data": {
             "name": "TCS Bank Proxy",
             "description": "TCS Bank Proxy",
-            "url": "http://proxy-tinkoff:8022/proxy/tinkoff",
+            "url": "http://${PROXY_TINKOFF}:${THRIFT_PORT}/proxy/tinkoff",
             "options": {}
         }
     }}}},
@@ -404,7 +404,7 @@
         "data": {
             "name": "VTB24 Bank Proxy",
             "description": "VTB24 Bank Proxy",
-            "url": "http://proxy-vtb:8022/proxy/vtb",
+            "url": "http://${PROXY_VTB}:${THRIFT_PORT}/proxy/vtb",
             "options": {}
         }
     }}}},
@@ -414,7 +414,7 @@
         "data": {
             "name": "Mocketbank Proxy",
             "description": "Mocked bank proxy for integration test purposes",
-            "url": "http://proxy-mocketbank:8022/proxy/mocketbank",
+            "url": "http://${PROXY_MOCKETBANK}:${THRIFT_PORT}/proxy/mocketbank",
             "options": {}
         }
     }}}},
@@ -424,7 +424,7 @@
         "data": {
             "name": "Mocket Inspector Proxy",
             "description": "Mocked inspector proxy for integration test purposes",
-            "url": "http://proxy-mocket-inspector:8022/proxy/mocket/inspector",
+            "url": "http://${PROXY_MOCKET_INSPECTOR}:{THRIFT_PORT}/proxy/mocket/inspector",
             "options": {"risk_score": "high"}
         }
     }}}},
@@ -434,7 +434,7 @@
         "data": {
             "name": "PIMP",
             "description": "Common Merchant Proxy",
-            "url": "http://proxy-pimp:8022/hg",
+            "url": "http://${PROXY_PIMP}:${THRIFT_PORT}/hg",
             "options": {}
         }
     }}}}

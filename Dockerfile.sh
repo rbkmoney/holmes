@@ -2,6 +2,16 @@
 cat <<EOF
 FROM $BASE_IMAGE
 MAINTAINER Igor Savchuk <i.savchuk@rbkmoney.com>
+ENV THRIFT_PORT=8022 \
+    CDS=cds \
+    SHUMWAY=shumway \
+    HELLGATE=hellgate \
+    MACHINEGUN=machinegun \
+    PROXY_TINKOFF=proxy-tinkoff \
+    PROXY_VTB=proxy-vtb \
+    PROXY_MOCKETBANK=proxy-mocketbank \
+    PROXY_MOCKET_INSPECTOR=proxy-inspector \
+    PROXY_PIMP=pimp
 COPY ./damsel/proto /opt/holmes/damsel/proto
 COPY ./scripts /opt/holmes/scripts
 CMD /sbin/init
