@@ -35,6 +35,6 @@ case "$1" in
         shift 1
         AGREEMENT_DATE="\"$1\""
         shift 1
-        bind_legal_agreement "$USERINFO" "$INVOICE_ID" "$CONTRACT_ID" "$AGREEMENT_ID" "$AGREEMENT_DATE" "$*"
+        bind_legal_agreement "$USERINFO" "$PARTY_ID" "$CONTRACT_ID" "$AGREEMENT_ID" "$AGREEMENT_DATE" "$*"
         ;;
 esac
