@@ -59,7 +59,9 @@
             "description": "World famous inspector Kovalsky at your service!",
             "proxy": {
                 "ref": {"id": 100},
-                "additional": {}
+                "additional": {
+                    "risk_score": "high"
+                }
             }
         }
     }}}},
@@ -157,8 +159,8 @@
     {"insert": {"object": {"category": {
         "ref": {"id": 1},
         "data": {
-            "name": "Integration test category",
-            "description": "Goods sold by intergration providers",
+            "name": "Basic test category",
+            "description": "Basic test category for mocketbank provider",
             "type": "test"
         }
     }}}},
@@ -166,8 +168,26 @@
     {"insert": {"object": {"category": {
         "ref": {"id": 2},
         "data": {
-            "name": "Pastry",
-            "description": "Items of food consisting of sweet pastry with a cream, jam, or fruit filling",
+            "name": "Quasi-live test category",
+            "description": "Quasi-live test category for mocketbank provider",
+            "type": "live"
+        }
+    }}}},
+
+    {"insert": {"object": {"category": {
+        "ref": {"id": 3},
+        "data": {
+            "name": "Pastry VTB24",
+            "description": "Items of food consisting of sweet pastry with a cream, jam, or fruit filling (only VTB24 clients should enjoy it)",
+            "type": "live"
+        }
+    }}}},
+
+    {"insert": {"object": {"category": {
+        "ref": {"id": 4},
+        "data": {
+            "name": "Pastry TCS",
+            "description": "Items of food consisting of sweet pastry with a cream, jam, or fruit filling (only TCS clients should enjoy it)",
             "type": "live"
         }
     }}}},
@@ -212,7 +232,10 @@
             "terminal": {"value": [
                 {"id": 1},
                 {"id": 2},
-                {"id": 3}
+                {"id": 3},
+                {"id": 4},
+                {"id": 5},
+                {"id": 6}
             ]},
             "proxy": {
                 "ref": {"id": 1},
@@ -228,8 +251,8 @@
             "name": "Tinkoff Credit Systems",
             "description": "Tinkoff Credit Systems",
             "terminal": {"value": [
-                {"id": 4},
-                {"id": 5}
+                {"id": 7},
+                {"id": 8}
             ]},
             "proxy": {
                 "ref": {"id": 2},
@@ -245,7 +268,7 @@
             "name": "VTB24",
             "description": "VTB24",
             "terminal": {"value": [
-                {"id": 6}
+                {"id": 9}
             ]},
             "proxy": {
                 "ref": {"id": 3},
@@ -258,8 +281,8 @@
     {"insert": {"object": {"terminal": {
         "ref": {"id": 1},
         "data": {
-            "name": "Mocketbank Visa",
-            "description": "Mocketbank Visa",
+            "name": "Mocketbank Visa Test",
+            "description": "Mocketbank Visa Test",
             "payment_method": {"id": {"bank_card": "visa"}},
             "category": {"id": 1},
             "risk_coverage": "high",
@@ -285,8 +308,8 @@
     {"insert": {"object": {"terminal": {
         "ref": {"id": 2},
         "data": {
-            "name": "Mocketbank MC",
-            "description": "Mocketbank MC",
+            "name": "Mocketbank MC Test",
+            "description": "Mocketbank MC Test",
             "payment_method": {"id": {"bank_card": "mastercard"}},
             "category": {"id": 1},
             "risk_coverage": "high",
@@ -312,8 +335,8 @@
     {"insert": {"object": {"terminal": {
         "ref": {"id": 3},
         "data": {
-            "name": "Mocketbank Maestro",
-            "description": "Mocketbank Maestro",
+            "name": "Mocketbank Maestro Test",
+            "description": "Mocketbank Maestro Test",
             "payment_method": {"id": {"bank_card": "maestro"}},
             "category": {"id": 1},
             "risk_coverage": "high",
@@ -336,8 +359,90 @@
         }
     }}}},
 
+
     {"insert": {"object": {"terminal": {
         "ref": {"id": 4},
+        "data": {
+            "name": "Mocketbank Visa Live",
+            "description": "Mocketbank Visa Live",
+            "payment_method": {"id": {"bank_card": "visa"}},
+            "category": {"id": 2},
+            "risk_coverage": "high",
+            "cash_flow": [
+                {
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
+                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                },
+                {
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
+                    "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
+                }
+            ],
+            "account": {
+                "currency": {"symbolic_code": "RUB"},
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
+            }
+        }
+    }}}},
+
+    {"insert": {"object": {"terminal": {
+        "ref": {"id": 5},
+        "data": {
+            "name": "Mocketbank MC Live",
+            "description": "Mocketbank MC Live",
+            "payment_method": {"id": {"bank_card": "mastercard"}},
+            "category": {"id": 2},
+            "risk_coverage": "high",
+            "cash_flow": [
+                {
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
+                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                },
+                {
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
+                    "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "payment_amount"}}
+                }
+            ],
+            "account": {
+                "currency": {"symbolic_code": "RUB"},
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
+            }
+        }
+    }}}},
+
+    {"insert": {"object": {"terminal": {
+        "ref": {"id": 6},
+        "data": {
+            "name": "Mocketbank Maestro Live",
+            "description": "Mocketbank Maestro Live",
+            "payment_method": {"id": {"bank_card": "maestro"}},
+            "category": {"id": 2},
+            "risk_coverage": "high",
+            "cash_flow": [
+                {
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
+                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                },
+                {
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
+                    "volume": {"share": {"parts": {"p": 19, "q": 1000}, "of": "payment_amount"}}
+                }
+            ],
+            "account": {
+                "currency": {"symbolic_code": "RUB"},
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
+            }
+        }
+    }}}},
+
+    {"insert": {"object": {"terminal": {
+        "ref": {"id": 7},
         "data": {
             "name": "TCS Visa",
             "description": "TCS Visa",
@@ -364,7 +469,7 @@
     }}}},
 
     {"insert": {"object": {"terminal": {
-        "ref": {"id": 5},
+        "ref": {"id": 8},
         "data": {
             "name": "TCS MC",
             "description": "TCS MC",
@@ -391,7 +496,7 @@
     }}}},
 
     {"insert": {"object": {"terminal": {
-        "ref": {"id": 6},
+        "ref": {"id": 9},
         "data": {
             "name": "VTB24 НСПК Мир",
             "description": "VTB24 НСПК Мир",
