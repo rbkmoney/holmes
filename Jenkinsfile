@@ -22,7 +22,7 @@ build('image-holmes', 'docker-host') {
     }
 
     try {
-      if (env.BRANCH_NAME == 'master') {
+      if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'epic/multiclaims') {
         runStage('push image') {
           sh 'make push_image'
         }
