@@ -44,11 +44,26 @@
         "ref": {"id": 42},
         "data": {
             "shop": {
+                "shop_id": "TESTSHOP",
                 "category": {"id": 1},
                 "currency": {"symbolic_code": "RUB"},
-                "details": {"name": "SUPER DEFAULT SHOP"}
+                "details": {"name": "SUPER DEFAULT SHOP"},
+                "location": {"url": ""}
             },
-            "test_contract_template": {"id": 1}
+            "contract": {
+                "contract_id": "TESTCONTRACT",
+                "test_contract_template": {"id": 1},
+                "payout_tool": {
+                    "payout_tool_id": "TESTPAYOUTTOOL",
+                    "payout_tool_info": {"bank_account": {
+                        "account": "01234567890123456789",
+                        "bank_name": "TEST BANK",
+                        "bank_post_account": "01234567890123456789",
+                        "bank_bik": "123456789"
+                    }},
+                    "payout_tool_currency": {"symbolic_code": "RUB"}
+                }
+            }
         }
     }}}},
 
