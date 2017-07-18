@@ -51,10 +51,10 @@
                 "location": {"url": ""}
             },
             "contract": {
-                "contract_id": "TESTCONTRACT",
+                "contract_id": "TEST",
                 "test_contract_template": {"id": 1},
                 "payout_tool": {
-                    "payout_tool_id": "TESTPAYOUTTOOL",
+                    "payout_tool_id": "TEST",
                     "payout_tool_info": {"bank_account": {
                         "account": "01234567890123456789",
                         "bank_name": "TEST BANK",
