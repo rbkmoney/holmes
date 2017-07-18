@@ -44,17 +44,17 @@
         "ref": {"id": 42},
         "data": {
             "shop": {
-                "shop_id": "TESTSHOP",
+                "shop_id": "TEST",
                 "category": {"id": 1},
                 "currency": {"symbolic_code": "RUB"},
                 "details": {"name": "SUPER DEFAULT SHOP"},
                 "location": {"url": ""}
             },
             "contract": {
-                "contract_id": "TESTCONTRACT",
+                "contract_id": "TEST",
                 "test_contract_template": {"id": 1},
                 "payout_tool": {
-                    "payout_tool_id": "TESTPAYOUTTOOL",
+                    "payout_tool_id": "TEST",
                     "payout_tool_info": {"bank_account": {
                         "account": "01234567890123456789",
                         "bank_name": "TEST BANK",
