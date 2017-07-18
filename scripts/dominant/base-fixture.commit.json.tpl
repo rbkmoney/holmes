@@ -44,7 +44,7 @@
         "ref": {"id": 42},
         "data": {
             "shop": {
-                "shop_id": "TESTSHOP",
+                "shop_id": "TEST",
                 "category": {"id": 1},
                 "currency": {"symbolic_code": "RUB"},
                 "details": {"name": "SUPER DEFAULT SHOP"},
