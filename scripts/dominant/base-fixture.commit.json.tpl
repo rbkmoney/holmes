@@ -121,7 +121,7 @@
                                     ]}
                                 }
                             ]},
-                            "hold_lifetime": {"seconds": 432000}
+                            "hold_lifetime": {"seconds": 5}
                         }
                     }
                 }
@@ -319,7 +319,7 @@
                 "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "payment_flow":
-				{"hold": {"hold_lifetime": {"seconds": 432000}}
+                {"hold": {"hold_lifetime": {"seconds": 5}}
             }
         }
     }}}},
@@ -347,6 +347,9 @@
             "account": {
                 "currency": {"symbolic_code": "RUB"},
                 "settlement": $(${CURDIR}/create-account.sh RUB $*)
+            },
+            "payment_flow":
+                {"hold": {"hold_lifetime": {"seconds": 5}}
             }
         }
     }}}},
