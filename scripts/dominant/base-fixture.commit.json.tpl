@@ -121,7 +121,7 @@
                                     ]}
                                 }
                             ]},
-                            "hold_lifetime": {"seconds": 5}
+                            "hold_lifetime": {"seconds": 3}
                         }
                     }
                 }
@@ -319,7 +319,7 @@
                 "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "payment_flow":
-                {"hold": {"hold_lifetime": {"seconds": 5}}
+                {"hold": {"hold_lifetime": {"seconds": 3}}
             }
         }
     }}}},
@@ -349,7 +349,7 @@
                 "settlement": $(${CURDIR}/create-account.sh RUB $*)
             },
             "payment_flow":
-                {"hold": {"hold_lifetime": {"seconds": 5}}
+                {"hold": {"hold_lifetime": {"seconds": 3}}
             }
         }
     }}}},
