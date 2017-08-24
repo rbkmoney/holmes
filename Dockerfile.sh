@@ -9,6 +9,7 @@ ENV THRIFT_PORT=8022 \
     MACHINEGUN=machinegun \
     PROXY_TINKOFF=proxy-tinkoff \
     PROXY_VTB=proxy-vtb \
+    PROXY_EUROSET=proxy-euroset \
     PROXY_MOCKETBANK=proxy-mocketbank \
     PROXY_MOCKET_INSPECTOR=proxy-inspector \
     PROXY_PIMP=pimp
