@@ -624,7 +624,7 @@
         "data": {
             "name": "Euroset Proxy",
             "description": "Euroset Proxy",
-            "url": "http://${PIMPORTER}:${THRIFT_PORT}/pimporter",
+            "url": "http://${proxy-agent}:${THRIFT_PORT}/proxy/agent",
             "options": {}
         }
     }}}},
