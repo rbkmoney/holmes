@@ -122,7 +122,15 @@
                                     ]}
                                 }
                             ]},
-                            "hold_lifetime": {"seconds": 3}
+                            "hold_lifetime": {"decisions": [
+                                {
+                                    "if_": {"any_of": [
+                                        {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "visa"}}}},
+                                        {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "mastercard"}}}}
+                                    ]},
+                                    "then_": {"value": {"seconds": 3}}
+                                }
+                            ]}
                         }
                     }
                 }
