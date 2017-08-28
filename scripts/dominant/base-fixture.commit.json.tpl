@@ -623,8 +623,8 @@
         "ref": {"id": 4},
         "data": {
             "name": "Euroset Proxy",
-            "description": "Euroset Proxy",
-            "url": "http://${PROXY_EUROSET}:${THRIFT_PORT}/proxy/euroset",
+            "description": "Agent Proxy Euroset",
+            "url": "http://${PROXY_AGENT}:${THRIFT_PORT}/proxy/agent",
             "options": {}
         }
     }}}},
