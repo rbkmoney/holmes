@@ -4,7 +4,7 @@
         "ref": {},
         "data": {
             "party_prototype": {"id": 42},
-            "providers": {"value": [{"id": 1}, {"id": 2}, {"id": 3}]},
+            "providers": {"value": [{"id": 1}, {"id": 2}, {"id": 3}, {"id": 4}]},
             "system_account_set": {"value": {"id": 1}},
             "external_account_set": {"value": {"id": 1}},
             "inspector": {"value": {"id": 1}},
@@ -98,7 +98,8 @@
                             "payment_methods": {"value": [
                                 {"id": {"bank_card": "visa"}},
                                 {"id": {"bank_card": "mastercard"}},
-                                {"id": {"bank_card": "nspkmir"}}
+                                {"id": {"bank_card": "nspkmir"}},
+                                {"id": {"payment_terminal": "euroset"}}
                             ]},
                             "cash_limit": {"decisions": [
                                 {
@@ -240,6 +241,14 @@
         }
     }}}},
 
+    {"insert": {"object": {"payment_method": {
+        "ref": {"id": {"payment_terminal": "euroset"}},
+        "data": {
+            "name": "Евросеть",
+            "description": "Оплата через терминалы Евросеть"
+        }
+    }}}},
+
     {"insert": {"object": {"provider": {
         "ref": {"id": 1},
         "data": {
@@ -291,6 +300,22 @@
                 "additional": {}
             },
             "abs_account": "1000000002"
+        }
+    }}}},
+
+    {"insert": {"object": {"provider": {
+        "ref": {"id": 4},
+        "data": {
+            "name": "Euroset",
+            "description": "Euroset",
+            "terminal": {"value": [
+                {"id": 10}
+            ]},
+            "proxy": {
+                "ref": {"id": 4},
+                "additional": {}
+            },
+            "abs_account": "1000000042"
         }
     }}}},
 
@@ -544,6 +569,33 @@
         }
     }}}},
 
+    {"insert": {"object": {"terminal": {
+        "ref": {"id": 10},
+        "data": {
+            "name": "Euroset",
+            "description": "Терминал Евросеть для магазинов с боевой категорией",
+            "payment_method": {"id": {"payment_terminal": "euroset"}},
+            "category": {"id": 2},
+            "risk_coverage": "high",
+            "cash_flow": [
+                {
+                    "source": {"provider": "settlement"},
+                    "destination": {"merchant": "settlement"},
+                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                },
+                {
+                    "source": {"system": "settlement"},
+                    "destination": {"provider": "settlement"},
+                    "volume": {"share": {"parts": {"p": 23, "q": 1000}, "of": "payment_amount"}}
+                }
+            ],
+            "account": {
+                "currency": {"symbolic_code": "RUB"},
+                "settlement": $(${CURDIR}/create-account.sh RUB $*)
+            }
+        }
+    }}}},
+
     {"insert": {"object": {"proxy": {
         "ref": {"id": 1},
         "data": {
@@ -570,6 +622,16 @@
             "name": "VTB24 Bank Proxy",
             "description": "VTB24 Bank Proxy",
             "url": "http://${PROXY_VTB}:${THRIFT_PORT}/proxy/vtb",
+            "options": {}
+        }
+    }}}},
+
+    {"insert": {"object": {"proxy": {
+        "ref": {"id": 4},
+        "data": {
+            "name": "Euroset Proxy",
+            "description": "Agent Proxy Euroset",
+            "url": "http://${PROXY_AGENT}:${THRIFT_PORT}/proxy/agent",
             "options": {}
         }
     }}}},
