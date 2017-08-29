@@ -121,6 +121,15 @@
                                         }
                                     ]}
                                 }
+                            ]},
+                            "hold_lifetime": {"decisions": [
+                                {
+                                    "if_": {"any_of": [
+                                        {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "visa"}}}},
+                                        {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "mastercard"}}}}
+                                    ]},
+                                    "then_": {"value": {"seconds": 3}}
+                                }
                             ]}
                         }
                     }
@@ -341,6 +350,9 @@
             "account": {
                 "currency": {"symbolic_code": "RUB"},
                 "settlement": $(${CURDIR}/create-account.sh RUB $*)
+            },
+            "payment_flow":
+                {"hold": {"hold_lifetime": {"seconds": 3}}
             }
         }
     }}}},
@@ -368,6 +380,9 @@
             "account": {
                 "currency": {"symbolic_code": "RUB"},
                 "settlement": $(${CURDIR}/create-account.sh RUB $*)
+            },
+            "payment_flow":
+                {"hold": {"hold_lifetime": {"seconds": 3}}
             }
         }
     }}}},
