@@ -482,7 +482,7 @@
                     {"id": 2}
                 ]},
                 "payment_methods": {"value": [
-                    {"id": {"bank_card": "nspkmir"}}
+                    {"id": {"payment_terminal": "euroset"}}
                 ]},
                 "cash_limit": {"value": {
                     "lower": {"inclusive": {"amount": 10000, "currency": {"symbolic_code": "RUB"}}},
