@@ -122,15 +122,13 @@
                                     ]}
                                 }
                             ]},
-                            "hold_lifetime": {"decisions": [
-                                {
-                                    "if_": {"any_of": [
-                                        {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "visa"}}}},
-                                        {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "mastercard"}}}}
-                                    ]},
-                                    "then_": {"value": {"seconds": 3}}
-                                }
-                            ]}
+                            "holds": {
+                                "payment_methods": {"value": [
+                                    {"id": {"bank_card": "visa"}},
+                                    {"id": {"bank_card": "mastercard"}}
+                                ]},
+                                "lifetime": {"value": {"seconds": 3}}
+                            }
                         }
                     }
                 }
@@ -263,18 +261,86 @@
             "name": "Mocketbank",
             "description": "Mocketbank",
             "terminal": {"value": [
-                {"id": 1},
-                {"id": 2},
-                {"id": 3},
-                {"id": 4},
-                {"id": 5},
-                {"id": 6}
+                {"id": 1}
             ]},
             "proxy": {
                 "ref": {"id": 1},
                 "additional": {}
             },
-            "abs_account": "0000000001"
+            "abs_account": "0000000001",
+            "terms": {
+                "currencies": {"value": [
+                    {"symbolic_code": "RUB"}
+                ]},
+                "categories": {"value": [
+                    {"id": 1},
+                    {"id": 2}
+                ]},
+                "payment_methods": {"value": [
+                    {"id": {"bank_card": "visa"}},
+                    {"id": {"bank_card": "mastercard"}},
+                    {"id": {"bank_card": "maestro"}},
+                ]},
+                "cash_limit": {"value": {
+                    "lower": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
+                    "upper": {"exclusive": {"amount": 10000000, "currency": {"symbolic_code": "RUB"}}}
+                }},
+                "cash_flow": {"decisions": [
+                    {
+                        "if_": {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "visa"}}}},
+                        "then_": {"value": [
+                            {
+                                "source": {"provider": "settlement"},
+                                "destination": {"merchant": "settlement"},
+                                "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                            },
+                            {
+                                "source": {"system": "settlement"},
+                                "destination": {"provider": "settlement"},
+                                "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
+                            }
+                        ]}
+                    },
+                    {
+                        "if_": {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "mastercard"}}}},
+                        "then_": {"value": [
+                            {
+                                "source": {"provider": "settlement"},
+                                "destination": {"merchant": "settlement"},
+                                "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                            },
+                            {
+                                "source": {"system": "settlement"},
+                                "destination": {"provider": "settlement"},
+                                "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "payment_amount"}}
+                            }
+                        ]}
+                    },
+                    {
+                        "if_": {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "maestro"}}}},
+                        "then_": {"value": [
+                            {
+                                "source": {"provider": "settlement"},
+                                "destination": {"merchant": "settlement"},
+                                "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                            },
+                            {
+                                "source": {"system": "settlement"},
+                                "destination": {"provider": "settlement"},
+                                "volume": {"share": {"parts": {"p": 19, "q": 1000}, "of": "payment_amount"}}
+                            }
+                        ]}
+                    }
+                ]},
+                "holds": {
+                    "lifetime": {"value": {"seconds": 3600}}
+                }
+            },
+            "accounts": [
+                {"key": {"symbolic_code": "RUB"}, "value": {
+                    "settlement": $(${CURDIR}/create-account.sh RUB $*)
+                }}
+            ]
         }
     }}}},
 
@@ -284,14 +350,66 @@
             "name": "Tinkoff Credit Systems",
             "description": "Tinkoff Credit Systems",
             "terminal": {"value": [
-                {"id": 7},
-                {"id": 8}
+                {"id": 2}
             ]},
             "proxy": {
                 "ref": {"id": 2},
                 "additional": {}
             },
-            "abs_account": "1000000001"
+            "abs_account": "1000000001",
+            "terms": {
+                "currencies": {"value": [
+                    {"symbolic_code": "RUB"}
+                ]},
+                "categories": {"value": [
+                    {"id": 2}
+                ]},
+                "payment_methods": {"value": [
+                    {"id": {"bank_card": "visa"}},
+                    {"id": {"bank_card": "mastercard"}}
+                ]},
+                "cash_limit": {"value": {
+                    "lower": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
+                    "upper": {"exclusive": {"amount": 10000000, "currency": {"symbolic_code": "RUB"}}}
+                }},
+                "cash_flow": {"decisions": [
+                    {
+                        "if_": {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "visa"}}}},
+                        "then_": {"value": [
+                            {
+                                "source": {"provider": "settlement"},
+                                "destination": {"merchant": "settlement"},
+                                "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                            },
+                            {
+                                "source": {"system": "settlement"},
+                                "destination": {"provider": "settlement"},
+                                "volume": {"share": {"parts": {"p": 14, "q": 1000}, "of": "payment_amount"}}
+                            }
+                        ]}
+                    },
+                    {
+                        "if_": {"condition": {"payment_tool": {"bank_card": {"payment_system_is": "mastercard"}}}},
+                        "then_": {"value": [
+                            {
+                                "source": {"provider": "settlement"},
+                                "destination": {"merchant": "settlement"},
+                                "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                            },
+                            {
+                                "source": {"system": "settlement"},
+                                "destination": {"provider": "settlement"},
+                                "volume": {"share": {"parts": {"p": 17, "q": 1000}, "of": "payment_amount"}}
+                            }
+                        ]}
+                    }
+                ]}
+            },
+            "accounts": [
+                {"key": {"symbolic_code": "RUB"}, "value": {
+                    "settlement": $(${CURDIR}/create-account.sh RUB $*)
+                }}
+            ]
         }
     }}}},
 
@@ -301,13 +419,45 @@
             "name": "VTB24",
             "description": "VTB24",
             "terminal": {"value": [
-                {"id": 9}
+                {"id": 3}
             ]},
             "proxy": {
                 "ref": {"id": 3},
                 "additional": {}
             },
-            "abs_account": "1000000002"
+            "abs_account": "1000000002",
+            "terms": {
+                "currencies": {"value": [
+                    {"symbolic_code": "RUB"}
+                ]},
+                "categories": {"value": [
+                    {"id": 2}
+                ]},
+                "payment_methods": {"value": [
+                    {"id": {"bank_card": "nspkmir"}}
+                ]},
+                "cash_limit": {"value": {
+                    "lower": {"inclusive": {"amount": 1000, "currency": {"symbolic_code": "RUB"}}},
+                    "upper": {"exclusive": {"amount": 10000000, "currency": {"symbolic_code": "RUB"}}}
+                }},
+                "cash_flow": {"value": [
+                    {
+                        "source": {"provider": "settlement"},
+                        "destination": {"merchant": "settlement"},
+                        "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                    },
+                    {
+                        "source": {"system": "settlement"},
+                        "destination": {"provider": "settlement"},
+                        "volume": {"share": {"parts": {"p": 23, "q": 1000}, "of": "payment_amount"}}
+                    }
+                ]}
+            },
+            "accounts": [
+                {"key": {"symbolic_code": "RUB"}, "value": {
+                    "settlement": $(${CURDIR}/create-account.sh RUB $*)
+                }}
+            ]
         }
     }}}},
 
@@ -317,290 +467,81 @@
             "name": "Euroset",
             "description": "Euroset",
             "terminal": {"value": [
-                {"id": 10}
+                {"id": 4}
             ]},
             "proxy": {
                 "ref": {"id": 4},
                 "additional": {}
             },
-            "abs_account": "1000000042"
+            "abs_account": "1000000042",
+            "terms": {
+                "currencies": {"value": [
+                    {"symbolic_code": "RUB"}
+                ]},
+                "categories": {"value": [
+                    {"id": 2}
+                ]},
+                "payment_methods": {"value": [
+                    {"id": {"payment_terminal": "euroset"}}
+                ]},
+                "cash_limit": {"value": {
+                    "lower": {"inclusive": {"amount": 10000, "currency": {"symbolic_code": "RUB"}}},
+                    "upper": {"exclusive": {"amount": 1000000, "currency": {"symbolic_code": "RUB"}}}
+                }},
+                "cash_flow": {"value": [
+                    {
+                        "source": {"provider": "settlement"},
+                        "destination": {"merchant": "settlement"},
+                        "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                    },
+                    {
+                        "source": {"system": "settlement"},
+                        "destination": {"provider": "settlement"},
+                        "volume": {"share": {"parts": {"p": 23, "q": 1000}, "of": "payment_amount"}}
+                    }
+                ]}
+            },
+            "accounts": [
+                {"key": {"symbolic_code": "RUB"}, "value": {
+                    "settlement": $(${CURDIR}/create-account.sh RUB $*)
+                }}
+            ]
         }
     }}}},
 
     {"insert": {"object": {"terminal": {
         "ref": {"id": 1},
         "data": {
-            "name": "Mocketbank Visa Test",
-            "description": "Mocketbank Visa Test",
-            "payment_method": {"id": {"bank_card": "visa"}},
-            "category": {"id": 1},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            },
-            "payment_flow":
-                {"hold": {"hold_lifetime": {"seconds": 3}}
-            }
+            "name": "Mocketbank Test Acquiring",
+            "description": "Mocketbank Test Acquiring",
+            "risk_coverage": "high"
         }
     }}}},
 
     {"insert": {"object": {"terminal": {
         "ref": {"id": 2},
         "data": {
-            "name": "Mocketbank MC Test",
-            "description": "Mocketbank MC Test",
-            "payment_method": {"id": {"bank_card": "mastercard"}},
-            "category": {"id": 1},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            },
-            "payment_flow":
-                {"hold": {"hold_lifetime": {"seconds": 3}}
-            }
+            "name": "TCS Acquiring",
+            "description": "TCS Acquiring",
+            "risk_coverage": "high"
         }
     }}}},
 
     {"insert": {"object": {"terminal": {
         "ref": {"id": 3},
         "data": {
-            "name": "Mocketbank Maestro Test",
-            "description": "Mocketbank Maestro Test",
-            "payment_method": {"id": {"bank_card": "maestro"}},
-            "category": {"id": 1},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 19, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
+            "name": "VTB24 НСПК Мир",
+            "description": "VTB24 НСПК Мир",
+            "risk_coverage": "high"
         }
     }}}},
-
 
     {"insert": {"object": {"terminal": {
         "ref": {"id": 4},
         "data": {
-            "name": "Mocketbank Visa Live",
-            "description": "Mocketbank Visa Live",
-            "payment_method": {"id": {"bank_card": "visa"}},
-            "category": {"id": 2},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 15, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
-        }
-    }}}},
-
-    {"insert": {"object": {"terminal": {
-        "ref": {"id": 5},
-        "data": {
-            "name": "Mocketbank MC Live",
-            "description": "Mocketbank MC Live",
-            "payment_method": {"id": {"bank_card": "mastercard"}},
-            "category": {"id": 2},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 18, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
-        }
-    }}}},
-
-    {"insert": {"object": {"terminal": {
-        "ref": {"id": 6},
-        "data": {
-            "name": "Mocketbank Maestro Live",
-            "description": "Mocketbank Maestro Live",
-            "payment_method": {"id": {"bank_card": "maestro"}},
-            "category": {"id": 2},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 19, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
-        }
-    }}}},
-
-    {"insert": {"object": {"terminal": {
-        "ref": {"id": 7},
-        "data": {
-            "name": "TCS Visa",
-            "description": "TCS Visa",
-            "payment_method": {"id": {"bank_card": "visa"}},
-            "category": {"id": 2},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 14, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
-        }
-    }}}},
-
-    {"insert": {"object": {"terminal": {
-        "ref": {"id": 8},
-        "data": {
-            "name": "TCS MC",
-            "description": "TCS MC",
-            "payment_method": {"id": {"bank_card": "mastercard"}},
-            "category": {"id": 2},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 17, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
-        }
-    }}}},
-
-    {"insert": {"object": {"terminal": {
-        "ref": {"id": 9},
-        "data": {
-            "name": "VTB24 НСПК Мир",
-            "description": "VTB24 НСПК Мир",
-            "payment_method": {"id": {"bank_card": "nspkmir"}},
-            "category": {"id": 2},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 23, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
-        }
-    }}}},
-
-    {"insert": {"object": {"terminal": {
-        "ref": {"id": 10},
-        "data": {
             "name": "Euroset",
             "description": "Терминал Евросеть для магазинов с боевой категорией",
-            "payment_method": {"id": {"payment_terminal": "euroset"}},
-            "category": {"id": 2},
-            "risk_coverage": "high",
-            "cash_flow": [
-                {
-                    "source": {"provider": "settlement"},
-                    "destination": {"merchant": "settlement"},
-                    "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
-                },
-                {
-                    "source": {"system": "settlement"},
-                    "destination": {"provider": "settlement"},
-                    "volume": {"share": {"parts": {"p": 23, "q": 1000}, "of": "payment_amount"}}
-                }
-            ],
-            "account": {
-                "currency": {"symbolic_code": "RUB"},
-                "settlement": $(${CURDIR}/create-account.sh RUB $*)
-            }
+            "risk_coverage": "high"
         }
     }}}},
 
