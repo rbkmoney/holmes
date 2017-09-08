@@ -362,7 +362,7 @@
                     {"symbolic_code": "RUB"}
                 ]},
                 "categories": {"value": [
-                    {"id": 2}
+                    {"id": 4}
                 ]},
                 "payment_methods": {"value": [
                     {"id": {"bank_card": "visa"}},
@@ -431,7 +431,7 @@
                     {"symbolic_code": "RUB"}
                 ]},
                 "categories": {"value": [
-                    {"id": 2}
+                    {"id": 3}
                 ]},
                 "payment_methods": {"value": [
                     {"id": {"bank_card": "nspkmir"}}
