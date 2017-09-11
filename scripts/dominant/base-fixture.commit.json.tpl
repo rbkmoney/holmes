@@ -128,6 +128,14 @@
                                     {"id": {"bank_card": "mastercard"}}
                                 ]},
                                 "lifetime": {"value": {"seconds": 3}}
+                            },
+                            "refunds": {
+                                "payment_methods": {"value": [
+                                    {"id": {"bank_card": "visa"}},
+                                    {"id": {"bank_card": "mastercard"}}
+                                ]},
+                                "fees": {"value": [
+                                ]}
                             }
                         }
                     }
@@ -334,6 +342,15 @@
                 ]},
                 "holds": {
                     "lifetime": {"value": {"seconds": 3600}}
+                },
+                "refunds": {
+                    "cash_flow": {"value": [
+                        {
+                            "source": {"merchant": "settlement"},
+                            "destination": {"provider": "settlement"},
+                            "volume": {"share": {"parts": {"p": 1, "q": 1}, "of": "payment_amount"}}
+                        }
+                    ]}
                 }
             },
             "accounts": [
