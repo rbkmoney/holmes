@@ -11,8 +11,7 @@ ENV THRIFT_PORT=8022 \
     PROXY_VTB=proxy-vtb \
     PROXY_AGENT=proxy-agent \
     PROXY_MOCKETBANK=proxy-mocketbank \
-    PROXY_MOCKET_INSPECTOR=proxy-inspector \
-    PROXY_PIMP=pimp
+    PROXY_MOCKET_INSPECTOR=proxy-inspector
 COPY ./damsel/proto /opt/holmes/damsel/proto
 COPY ./scripts /opt/holmes/scripts
 CMD /sbin/init

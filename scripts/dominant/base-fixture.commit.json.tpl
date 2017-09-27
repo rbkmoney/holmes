@@ -610,16 +610,5 @@
             "url": "http://${PROXY_MOCKET_INSPECTOR}:${THRIFT_PORT}/proxy/mocket/inspector",
             "options": {"risk_score": "high"}
         }
-    }}}},
-
-    {"insert": {"object": {"proxy": {
-        "ref": {"id": 1000},
-        "data": {
-            "name": "PIMP",
-            "description": "Common Merchant Proxy",
-            "url": "http://${PROXY_PIMP}:${THRIFT_PORT}/hg",
-            "options": {}
-        }
     }}}}
-
 ]}
