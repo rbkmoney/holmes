@@ -137,6 +137,11 @@
                                 "fees": {"value": [
                                 ]}
                             }
+                        },
+                        "recurrent_paytools": {
+                            "payment_methods": {"value": [
+                                {"id": {"bank_card": "visa"}}
+                            ]}
                         }
                     }
                 }
@@ -155,6 +160,11 @@
                         "payments": {
                             "categories": {"value": [
                                 {"id": 2}
+                            ]}
+                        },
+                        "recurrent_paytools": {
+                            "payment_methods": {"value": [
+                                {"id": {"bank_card": "visa"}}
                             ]}
                         }
                     }
@@ -276,7 +286,7 @@
                 "additional": {}
             },
             "abs_account": "0000000001",
-            "terms": {
+            "payment_terms": {
                 "currencies": {"value": [
                     {"symbolic_code": "RUB"}
                 ]},
@@ -353,6 +363,18 @@
                     ]}
                 }
             },
+            "recurrent_paytool_terms": {
+                "payment_methods": {"value": [
+                    {"id": {"bank_card": "visa"}}
+                ]},
+                "categories": {"value": [
+                    {"id": 1},
+                    {"id": 2}
+                ]},
+                "cash_value": {"value": [
+                    {"amount": 1000, "currency": {"symbolic_code": "RUB"}}
+                ]}
+            },
             "accounts": [
                 {"key": {"symbolic_code": "RUB"}, "value": {
                     "settlement": $(${CURDIR}/create-account.sh RUB $*)
@@ -374,7 +396,7 @@
                 "additional": {}
             },
             "abs_account": "1000000001",
-            "terms": {
+            "payment_terms": {
                 "currencies": {"value": [
                     {"symbolic_code": "RUB"}
                 ]},
@@ -422,6 +444,17 @@
                     }
                 ]}
             },
+            "recurrent_paytool_terms": {
+                "payment_methods": {"value": [
+                    {"id": {"bank_card": "visa"}}
+                ]},
+                "categories": {"value": [
+                    {"id": 4}
+                ]},
+                "cash_value": {"value": [
+                    {"amount": 1000, "currency": {"symbolic_code": "RUB"}}
+                ]}
+            },
             "accounts": [
                 {"key": {"symbolic_code": "RUB"}, "value": {
                     "settlement": $(${CURDIR}/create-account.sh RUB $*)
@@ -443,7 +476,7 @@
                 "additional": {}
             },
             "abs_account": "1000000002",
-            "terms": {
+            "payment_terms": {
                 "currencies": {"value": [
                     {"symbolic_code": "RUB"}
                 ]},
@@ -491,7 +524,7 @@
                 "additional": {}
             },
             "abs_account": "1000000042",
-            "terms": {
+            "payment_terms": {
                 "currencies": {"value": [
                     {"symbolic_code": "RUB"}
                 ]},
