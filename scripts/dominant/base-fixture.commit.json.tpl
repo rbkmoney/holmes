@@ -162,11 +162,7 @@
                                 {"id": 2}
                             ]}
                         },
-                        "recurrent_paytools": {
-                            "payment_methods": {"value": [
-                                {"id": {"bank_card": "visa"}}
-                            ]}
-                        }
+                        "recurrent_paytools": {}
                     }
                 }
             ]
