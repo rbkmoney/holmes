@@ -1,0 +1,15 @@
+{application, migration, [
+    {description, "Migration script for PartyManagement"},
+    {vsn, "0.1.0"},
+    {applications, [
+        kernel,
+        stdlib,
+        genlib,
+        woody,
+        woody_user_identity,
+        getopt,
+        dmsl
+    ]},
+    {env, []},
+    {modules, []}
+]}.
