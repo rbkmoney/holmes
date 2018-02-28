@@ -33,7 +33,7 @@ main(Args) ->
             ok = error_logger:tty(false),
             State = #{
                 hg_url => HellgateUrl,
-                party_id => PartyID,
+                party_id => iolist_to_binary(PartyID),
                 user_info => make_user_info(),
                 woody_context => make_context(),
                 payment_institution_ref => #domain_PaymentInstitutionRef{id = PaymentInstitutionID},
