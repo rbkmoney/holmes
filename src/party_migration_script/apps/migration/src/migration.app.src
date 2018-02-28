@@ -5,11 +5,8 @@
         kernel,
         stdlib,
         genlib,
-        lager,
-        lager_logstash_formatter,
         woody,
         woody_user_identity,
-        scoper,
         getopt,
         dmsl
     ]},

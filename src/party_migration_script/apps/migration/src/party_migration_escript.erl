@@ -131,7 +131,7 @@ party_call(Function, Args, State) ->
             Request,
             #{
                 url           => Url,
-                event_handler => scoper_woody_event_handler
+                event_handler => dummy_woody_event_handler
             },
             Context
         )
