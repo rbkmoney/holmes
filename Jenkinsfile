@@ -17,6 +17,12 @@ build('image-holmes', 'docker-host') {
       }
     }
 
+    runStage('compile scripts') {
+      withGithubPrivkey {
+        sh 'make wc_party_migration_script'
+      }
+    }
+
     runStage('build image') {
       sh 'make build_image'
     }
