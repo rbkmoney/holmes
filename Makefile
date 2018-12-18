@@ -31,4 +31,4 @@ submodules:
 	@if git submodule status | egrep -q '^[-]|^[+]'; then git submodule update --init; fi
 
 lib:
-	$(MAKE) RELDIR=$(CURDIR)/scripts -C lib
+	$(MAKE) -C lib
