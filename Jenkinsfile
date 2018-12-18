@@ -19,7 +19,7 @@ build('image-holmes', 'docker-host') {
 
     runStage('compile scripts') {
       withGithubPrivkey {
-        sh 'make wc_party_migration_script'
+        sh 'make wc_lib'
       }
     }
 
