@@ -4,8 +4,6 @@ default: migration
 
 .PHONY: all compile dialyze clean distclean migration
 
-THRIFT_PORT = 8022
-
 compile:
 	$(REBAR) compile
 
