@@ -14,8 +14,8 @@ ENV THRIFT_PORT=8022 \
     PROXY_MOCKET_INSPECTOR=proxy-inspector \
     PROXY_PIMP=pimp
 COPY ./damsel/proto /opt/holmes/damsel/proto
-COPY ./scripts /opt/holmes/scripts
-COPY ./src/party_migration_script/_build/default/bin/migration /opt/holmes/scripts/hellgate/party-migration
+COPY ./scripts      /opt/holmes/scripts
+COPY ./lib/scripts  /opt/holmes/scripts
 CMD /sbin/init
 # A bit of magic below to get a proper branch name
 # even when the HEAD is detached (Hey Jenkins!

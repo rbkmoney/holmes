@@ -1,7 +1,3 @@
-REBAR := $(shell which rebar3 2>/dev/null || which ./rebar3)
-SUBMODULES = build_utils damsel
-SUBTARGETS = $(patsubst %,%/.git,$(SUBMODULES))
-
 UTILS_PATH := build_utils
 TEMPLATES_PATH := .
 
@@ -14,12 +10,12 @@ SERVICE_IMAGE_PUSH_TAG ?= $(SERVICE_IMAGE_TAG)
 
 # Base image for the service
 BASE_IMAGE_NAME := build
-BASE_IMAGE_TAG := 57872563e0638f6e3a61b784615a483c1e5a34c4
+BASE_IMAGE_TAG := 9d4d70317dd08abd400798932a231798ee254a87
 
 # Build image tag to be used
-BUILD_IMAGE_TAG := 4fa802d2f534208b9dc2ae203e2a5f07affbf385
+BUILD_IMAGE_TAG := 9d4d70317dd08abd400798932a231798ee254a87
 
-CALL_ANYWHERE := all submodules party_migration_script
+CALL_ANYWHERE := all submodules lib
 
 # Hint: 'test' might be a candidate for CALL_W_CONTAINER-only target
 CALL_W_CONTAINER := $(CALL_ANYWHERE)
@@ -31,11 +27,8 @@ all: submodules
 -include $(UTILS_PATH)/make_lib/utils_container.mk
 -include $(UTILS_PATH)/make_lib/utils_image.mk
 
-$(SUBTARGETS): %/.git: %
-	git submodule update --init $<
-	touch $@
+submodules:
+	@if git submodule status | egrep -q '^[-]|^[+]'; then git submodule update --init; fi
 
-submodules: $(SUBTARGETS)
-
-party_migration_script:
-	cd src/party_migration_script && $(MAKE)
+lib:
+	$(MAKE) -C lib
