@@ -5,7 +5,7 @@ SCRIPTNAME=$(basename $0)
 get_state () {
     woorl $3 \
         -s damsel/proto/payment_processing.thrift \
-        http://${HELLGATE}:${THRIFT_PORT}/v1/processing/invoicing \
+        http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing \
         Invoicing Get "$1" "$2"
 }
 
