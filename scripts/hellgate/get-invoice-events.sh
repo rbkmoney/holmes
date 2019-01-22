@@ -3,9 +3,9 @@
 SCRIPTNAME=$(basename $0)
 
 get_events () {
-    woorl $4 \
+    ${WOORL:-woorl} \
         -s damsel/proto/payment_processing.thrift \
-        http://${HELLGATE}:${THRIFT_PORT}/v1/processing/invoicing \
+        http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing \
         Invoicing GetEvents $1 $2 $3
 }
 
@@ -13,7 +13,7 @@ case "$1" in
     ""|"-h"|"--help" )
         echo -e "Given ID of an invoice fetch a number of events emitted by this invoice."
         echo
-        echo -e "Usage: ${SCRIPTNAME} invoice_id limit [after] [woorl_opts]"
+        echo -e "Usage: ${SCRIPTNAME} invoice_id [limit] [after] [woorl_opts]"
         echo -e "  invoice_id      Invoice ID (string)."
         echo -e "  limit           Limit of number of events to fetch."
         echo -e "  after           Event ID after which we want to fetch events." \
@@ -28,7 +28,12 @@ case "$1" in
         USERINFO="{\"id\":\"${SCRIPTNAME}\",\"type\":{\"service_user\":{}}}"
         INVOICE_ID="\"$1\""
         shift 1
-        LIMIT="$1"
+        if [ -n "$1" ]; then
+            LIMIT=$1
+            shift 1
+        else
+            LIMIT=100
+        fi
         shift 1
         if [ -n "$1" ]; then
             RANGE="{\"after\":$1,\"limit\":${LIMIT}}"
