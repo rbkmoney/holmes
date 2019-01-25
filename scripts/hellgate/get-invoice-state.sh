@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ -f woorlrc ] && source woorlrc
+
 SCRIPTNAME=$(basename $0)
 
 get_state () {
