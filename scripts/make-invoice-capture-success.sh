@@ -6,8 +6,6 @@
 
 set -e
 
-[ -f woorlrc ] && source woorlrc
-
 INVOICE="${1}"
 PAYMENT="${2:-1}"
 

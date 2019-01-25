@@ -23,6 +23,6 @@ case "$1" in
         FIXTURE="$(${LIBDIR}/template.sh ${CURDIR}/base-fixture.commit.json.tpl $*)"
         woorl $* \
             -s damsel/proto/domain_config.thrift \
-            http://${DOMINANT:-dominant}:${THRIFT_PORT:-8022}/v1/domain/repository \
+            http://${DOMINANT:-dominant}:8022/v1/domain/repository \
             Repository Commit 0 "${FIXTURE}"
 esac
