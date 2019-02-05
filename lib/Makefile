@@ -11,6 +11,6 @@ party_migration_script:
 	cp $@/_build/default/bin/migration $(RELDIR)/hellgate/party-migration
 
 observer_cli:
-	cd $@ && $(REBAR) escriptize
+	cd $@ && $(REBAR) as inet6 escriptize
 	mkdir -p $(RELDIR)
-	cp $@/_build/default/bin/observer_cli $(RELDIR)/observer-cli
+	cp $@/_build/inet6/bin/observer_cli $(RELDIR)/observer-cli

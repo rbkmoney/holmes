@@ -8,7 +8,8 @@
 	branch = master
 [submodule "lib/observer_cli"]
 	path = lib/observer_cli
-	url = https://github.com/zhongwencool/observer_cli
+	url = https://github.com/keynslug/observer_cli
+	branch = master
 [submodule "mgproto"]
 	path = mgproto
 	url = git@github.com:rbkmoney/machinegun_proto
