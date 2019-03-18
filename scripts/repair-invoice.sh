@@ -29,4 +29,4 @@ USERINFO='{"id":"woorl","type":{"service_user":{}}}'
 ${WOORL:-woorl} \
     -s damsel/proto/payment_processing.thrift \
     "http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing" \
-    Invoicing Repair "${USERINFO}" "\"${INVOICE}\"" "${INVOICE_CHANGES}"
+    Invoicing Repair "${USERINFO}" "\"${INVOICE}\"" "${INVOICE_CHANGES}" "{}"
