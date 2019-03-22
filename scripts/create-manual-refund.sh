@@ -34,7 +34,7 @@ REASON="${5:-\"Refunded manually\"}"
 [ -z "${INVOICE_ID}" -o -z "${PAYMENT_ID}" -o -z "${AMOUNT}" -o -z "${CURCODE}" -o -z "${REASON}" ] && usage
 
 PARAMS=
-TRXFILE="trx.${INVOICE}.${PAYMENT}.json"
+TRXFILE="trx.${INVOICE}.${PAYMENT}.refund.json"
 
 if [ -f "${TRXFILE}" ]; then
 
