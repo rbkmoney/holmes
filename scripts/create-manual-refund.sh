@@ -8,16 +8,16 @@ SCRIPTNAME="$(basename $0)"
 source "${CWD}/lib/logging"
 
 function usage {
-  echo -e "Given ID of an invoice and a payment make payment refunded without actual refund proccess."
+  echo -ne "Given ID of an invoice and a payment make payment refunded without actual refund proccess."
+  echo -ne "You should bind transaction info by placing a file named "
+  echo -ne "'trx.{invoice_id}.{payment_id}.json' under the feet."
   echo
-  echo -e "Usage: $(em ${SCRIPTNAME} invoice_id payment_id amount currency reason trx_id trx_timestamp)"
+  echo -e "Usage: $(em ${SCRIPTNAME} invoice_id payment_id amount currency reason)"
   echo -e "  $(em invoice_id)      Invoice ID (string)."
   echo -e "  $(em payment_id)      Payment ID (string), $(em 1) by default."
   echo -e "  $(em amount)          Amount (number)."
   echo -e "  $(em currency)        Currency code (string)."
-  echo -e "  $(em reason)          Reason (string)."
-  echo -e "  $(em trx_id)          Manual refund transaction ID (string)."
-  echo -e "  $(em trx_timestamp)   Manual refund transaction timetamp (string)."
+  echo -e "  $(em reason)          Reason (string), $(em "Refunded manually") by default."
   echo
   echo -e "More information:"
   echo -e "  https://github.com/rbkmoney/damsel/blob/master/proto/payment_processing.thrift"
@@ -26,25 +26,27 @@ function usage {
 
 USERINFO=$(jq -nc "{id:\"${SCRIPTNAME}\", type:{service_user:{}}}")
 INVOICE_ID="${1}"
-PAYMENT_ID="${2}"
+PAYMENT_ID="${2:-1}"
 AMOUNT="${3}"
 CURCODE="${4}"
-REASON="${5}"
-TRX_ID="${6}"
-TRX_TIMESTAMP="${7}"
+REASON="${5:-\"Refunded manually\"}"
 
-[ -z "${INVOICE_ID}" -o -z "${PAYMENT_ID}" -o -z "${AMOUNT}" -o -z "${CURCODE}" \
--o -z "${REASON}" -o -z "${TRX_ID}" -o -z "${TRX_TIMESTAMP}" ] && usage
+[ -z "${INVOICE_ID}" -o -z "${PAYMENT_ID}" -o -z "${AMOUNT}" -o -z "${CURCODE}" -o -z "${REASON}" ] && usage
 
-PARAMS=$(jq -nc "{
+PARAMS=
+TRXFILE="trx.${INVOICE}.${PAYMENT}.json"
+
+if [ -f "${TRXFILE}" ]; then
+
+  PARAMS=$(jq -nc "{
     reason: \"${REASON}\",
     cash:{amount:${AMOUNT}, currency:{symbolic_code:\"${CURCODE}\"}},
-    transaction_info: {
-        id: \"${TRX_ID}\",
-        timestamp: \"${TRX_TIMESTAMP}\",
-        extra: {}
-    }
-}")
+    transaction_info: $(cat "${TRXFILE}")
+  }")
+
+else
+  err "No transaction info to bound, file $(em "${TRXFILE}") is missing"
+fi
 
 [ -f woorlrc ] && source woorlrc
 
