@@ -12,10 +12,10 @@ function usage {
   echo -ne "You should bind transaction info by placing a file named "
   echo -ne "'trx.{invoice_id}.{payment_id}.json' under the feet."
   echo
-  echo -e "Usage: $(em ${SCRIPTNAME} invoice_id payment_id amount currency reason)"
+  echo -e "Usage: $(em ${SCRIPTNAME} invoice_id payment_id [amount currency reason])"
   echo -e "  $(em invoice_id)      Invoice ID (string)."
-  echo -e "  $(em payment_id)      Payment ID (string), $(em 1) by default."
-  echo -e "  $(em amount)          Amount (number)."
+  echo -e "  $(em payment_id)      Payment ID (string)."
+  echo -e "  $(em amount)          Amount (number), will refund whole payment amount if not defined."
   echo -e "  $(em currency)        Currency code (string)."
   echo -e "  $(em reason)          Reason (string), $(em "Refunded manually") by default."
   echo
@@ -26,7 +26,7 @@ function usage {
 
 USERINFO=$(jq -nc "{id:\"${SCRIPTNAME}\", type:{service_user:{}}}")
 INVOICE_ID="${1}"
-PAYMENT_ID="${2:-1}"
+PAYMENT_ID="${2}"
 AMOUNT="${3}"
 CURCODE="${4}"
 REASON="${5:-Refunded manually}"
