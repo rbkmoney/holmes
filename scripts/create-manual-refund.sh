@@ -29,23 +29,23 @@ INVOICE_ID="${1}"
 PAYMENT_ID="${2:-1}"
 AMOUNT="${3}"
 CURCODE="${4}"
-REASON="${5:-\"Refunded manually\"}"
+REASON="${5:-Refunded manually}"
 
-[ -z "${INVOICE_ID}" -o -z "${PAYMENT_ID}" -o -z "${AMOUNT}" -o -z "${CURCODE}" -o -z "${REASON}" ] && usage
+[ -z "${INVOICE_ID}" -o -z "${PAYMENT_ID}" -o -z "${REASON}" ] && usage
 
-PARAMS=
-TRXFILE="trx.${INVOICE}.${PAYMENT}.refund.json"
+TRXFILE="trx.${INVOICE_ID}.${PAYMENT_ID}.refund.json"
+
+REASONINFO=$(jq -nc "{reason: \"${REASON}\"}")
+PARAMS=${REASONINFO}
+
+if [ ! -z "${AMOUNT}" ] && [ ! -z "${CURCODE}" ]; then
+  CASHINFO=$(jq -nc "{cash: {amount:${AMOUNT}, currency:{symbolic_code:\"${CURCODE}\"}}}")
+  PARAMS=$(echo ${PARAMS} ${CASHINFO} | jq -s add)
+fi
 
 if [ -f "${TRXFILE}" ]; then
-
-  PARAMS=$(jq -nc "{
-    reason: \"${REASON}\",
-    cash:{amount:${AMOUNT}, currency:{symbolic_code:\"${CURCODE}\"}},
-    transaction_info: $(cat "${TRXFILE}")
-  }")
-
-else
-  err "No transaction info to bound, file $(em "${TRXFILE}") is missing"
+  TRXINFO=$(jq -nc "{transaction_info: $(cat "${TRXFILE}")}")
+  PARAMS=$(echo ${PARAMS} ${TRXINFO} | jq -s add)
 fi
 
 [ -f woorlrc ] && source woorlrc
