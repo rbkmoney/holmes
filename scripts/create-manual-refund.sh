@@ -8,9 +8,9 @@ SCRIPTNAME="$(basename $0)"
 source "${CWD}/lib/logging"
 
 function usage {
-  echo -ne "Given ID of an invoice and a payment make payment refunded without actual refund proccess."
+  echo -e "Given ID of an invoice and a payment make payment refunded without actual refund proccess."
   echo -ne "You should bind transaction info by placing a file named "
-  echo -ne "'trx.{invoice_id}.{payment_id}.json' under the feet."
+  echo -e "'trx.{invoice_id}.{payment_id}.refund.json' under the feet."
   echo
   echo -e "Usage: $(em ${SCRIPTNAME} invoice_id payment_id [amount currency reason])"
   echo -e "  $(em invoice_id)      Invoice ID (string)."
@@ -54,4 +54,3 @@ ${WOORL:-woorl} \
     -s damsel/proto/payment_processing.thrift \
     http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing \
     Invoicing CreateManualRefund "${USERINFO}" "\"${INVOICE_ID}\"" "\"${PAYMENT_ID}\"" "${PARAMS}"
-
