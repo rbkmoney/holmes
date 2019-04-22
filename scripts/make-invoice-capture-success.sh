@@ -6,8 +6,9 @@
 
 set -e
 
+CWD="$(dirname $0)"
+
 INVOICE="${1}"
-PAYMENT="${2:-1}"
 
 case ${INVOICE} in
   ""|"-h"|"--help" )
@@ -15,9 +16,8 @@ case ${INVOICE} in
     echo -ne "invoice has been paid. No transaction info is bound or rebound."
     echo
     echo
-    echo -e "Usage: ${SCRIPTNAME} invoice_id [payment_id]"
+    echo -e "Usage: ${SCRIPTNAME} invoice_id"
     echo -e "  invoice_id      Invoice ID (string)."
-    echo -e "  payment_id      Payment ID (string), by default = '1'."
     echo -e "  -h, --help      Show this help message."
     echo
     echo -e "More information:"
@@ -28,6 +28,21 @@ case ${INVOICE} in
     ;;
 esac
 
+INVOICE_EVENTS=$(${CWD}/hellgate/get-invoice-events.sh ${INVOICE})
+LAST_CHANGE=$(echo "${INVOICE_EVENTS}" | jq '.[-1].payload.invoice_changes[-1].invoice_payment_change')
+
+PAYMENT=$(echo "${LAST_CHANGE}" | jq -r '.id')
+SESSION=$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change')
+TARGET=$(echo "${SESSION}" | jq -r '.target')
+
+if [ \
+  "${PAYMENT}" = "null" -o \
+  "$(echo "${TARGET}" | jq -r '.captured')" = "null" -o \
+  "$(echo "${SESSION}" | jq -r '.payload.session_started')" = "null" \
+]; then
+  err "Last seen change looks wrong for this repair scenario"
+fi
+
 # Essentially we have to simulate the failed session has been restarted and then
 # finished successfully.
 CHANGES=$(cat <<END
@@ -37,9 +52,7 @@ CHANGES=$(cat <<END
         "id": "${PAYMENT}",
         "payload": {
           "invoice_payment_session_change": {
-            "target": {
-              "captured": []
-            },
+            "target": ${TARGET},
             "payload": {
               "session_finished": {
                 "result": {
@@ -56,4 +69,4 @@ END
 )
 
 # Then we should stuff it with previously reconstructed history
-./repair-invoice.sh "${INVOICE}" "${CHANGES}"
+./repair-invoice.sh "${INVOICE}" "${CHANGES}" '{}'
