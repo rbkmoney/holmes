@@ -70,6 +70,7 @@ def unlock():
 
     call_keyring("StartUnlock")
 
+    successfully_unlocked = False
     for shareholder_id in list(shares):
         signed_share = shares[shareholder_id]
         result = json.loads(call_keyring("ConfirmUnlock", shareholder_id, signed_share))
@@ -77,7 +78,11 @@ def unlock():
             print("Error! Exception returned: {}".format(result))
             exit(1)
         if "success" in result:
+            successfully_unlocked = True
             break
+    if not successfully_unlocked:
+        print("Keyring is still locked")
+        exit(1)
 
 
 def get_state():
