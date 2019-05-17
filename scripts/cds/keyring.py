@@ -1,5 +1,9 @@
+#!/usr/bin/python3
+
 import json
 import os
+import sys
+import getopt
 import subprocess
 
 
@@ -40,7 +44,7 @@ def strip_line(string):
     return result
 
 
-def main():
+def init():
     encrypted_shares_json = call_keyring("StartInit", 2)
 
     encrypted_mk_shares = json.loads(encrypted_shares_json)
@@ -61,5 +65,46 @@ def main():
     print(json.dumps(shares))
 
 
+def unlock():
+    shares = json.loads(sys.stdin.read())
+
+    call_keyring("StartUnlock")
+
+    for shareholder_id in list(shares):
+        signed_share = shares[shareholder_id]
+        result = json.loads(call_keyring("ConfirmUnlock", shareholder_id, signed_share))
+        if "success" not in result and "more_keys_needed" not in result:
+            print("Error! Exception returned: {}".format(result))
+            exit(1)
+        if "success" in result:
+            break
+
+
+def get_state():
+    print(call_keyring("GetState"))
+
+
+def main(argv):
+    help_promt = "usage: keyring.py {init | unlock | state} [-h | --help]"
+    try:
+        opts, args = getopt.getopt(argv, "h", ["--help"])
+    except getopt.GetoptError:
+        print(help_promt)
+        exit(2)
+    for opt, arg in opts:
+        if opt in ('-h', '--help'):
+            print(help_promt)
+            exit()
+    if len(args) == 0:
+        print(help_promt)
+        exit(2)
+    elif args[0] == 'init':
+        init()
+    elif args[0] == 'unlock':
+        unlock()
+    elif args[0] == 'state':
+        get_state()
+
+
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
