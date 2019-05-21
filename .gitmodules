@@ -13,3 +13,7 @@
 [submodule "mgproto"]
 	path = mgproto
 	url = git@github.com:rbkmoney/machinegun_proto
+[submodule "cds_proto"]
+	path = cds_proto
+	url = git@github.com:rbkmoney/cds-proto.git
+	branch = master

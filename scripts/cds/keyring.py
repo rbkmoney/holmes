@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import json
 import os
@@ -23,8 +23,8 @@ def call_keyring(func, *args):
     thrift_port = os.environ["THRIFT_PORT"]
     json_args = [json.dumps(arg) for arg in args]
     woorl_args = [
-        "woorl", "-s", "damsel/proto/cds.thrift",
-        f"http://{cds}:{thrift_port}/v1/keyring",
+        "woorl", "-s", "cds_proto/proto/keyring.thrift",
+        f"http://{cds}:{thrift_port}/v2/keyring",
         "Keyring", func, *json_args
     ]
     return call(woorl_args, raw=True)
