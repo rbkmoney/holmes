@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import json
 import os
@@ -12,11 +12,13 @@ def call(args, raw=False, stdin=""):
     if not raw:
         args = args.split(" ")
     handler = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    stdin = six.ensure_binary(stdin)
     out, _err = handler.communicate(input=stdin)
     assert out is not None
+    out = six.ensure_str(out)
     if handler.returncode != 0:
         raise Exception("oops args {} failed with code {} and result {}"
-                        .format(args, handler.returncode, six.ensure_str(out)))
+                        .format(args, handler.returncode, out))
     return out
 
 
@@ -24,25 +26,24 @@ def call_keyring(func, *args):
     cds = os.environ["CDS"]
     thrift_port = os.environ["THRIFT_PORT"]
     json_args = [json.dumps(arg) for arg in args]
-    woorl_args = [
-        "woorl", "-s", "cds_proto/proto/keyring.thrift",
-        "http://{}:{}/v2/keyring".format(cds, thrift_port),
-        "Keyring", func
-    ] + json_args
+    woorl_args = \
+        [
+            "woorl", "-s", "cds_proto/proto/keyring.thrift",
+            "http://{}:{}/v2/keyring".format(cds, thrift_port),
+            "Keyring", func
+        ] + json_args
     return call(woorl_args, raw=True)
 
 
 def decrypt_and_sign(shareholder_id, encrypted_share):
     decrypted_share = strip_line(
-        six.ensure_str(
-            call("step crypto jwe decrypt --key {}.enc.json".format(shareholder_id),
-                 stdin=six.ensure_binary(encrypted_share)))
+        call("step crypto jwe decrypt --key {}.enc.json".format(shareholder_id),
+             stdin=encrypted_share)
     )
     assert decrypted_share != ""
     return strip_line(
-        six.ensure_str(
-            call("step crypto jws sign --key {}.sig.json -".format(shareholder_id),
-                 stdin=six.ensure_binary(decrypted_share))))
+        call("step crypto jws sign --key {}.sig.json -".format(shareholder_id),
+             stdin=decrypted_share))
 
 
 def strip_line(string):
@@ -52,7 +53,7 @@ def strip_line(string):
 
 
 def init():
-    encrypted_shares_json = six.ensure_str(call_keyring("StartInit", 2))
+    encrypted_shares_json = call_keyring("StartInit", 2)
 
     encrypted_mk_shares = json.loads(encrypted_shares_json)
     result = None
@@ -63,13 +64,13 @@ def init():
         shareholder_id = encrypted_mk_share['id']
         encrypted_share = encrypted_mk_share['encrypted_share']
         signed_share = decrypt_and_sign(shareholder_id, encrypted_share)
-        result = json.loads(six.ensure_str(call_keyring("ValidateInit", shareholder_id, signed_share)))
+        result = json.loads(call_keyring("ValidateInit", shareholder_id, signed_share))
         if "success" not in result and "more_keys_needed" not in result:
-            print("Error! Exception returned: {}".format(result))
+            six.print_("Error! Exception returned: {}".format(result))
             exit(1)
         shares[shareholder_id] = signed_share
     assert "success" in result, "Last ValidateInit return not Success: {}".format(result)
-    print(json.dumps(shares))
+    six.print_(json.dumps(shares))
 
 
 def unlock():
@@ -79,19 +80,19 @@ def unlock():
 
     for shareholder_id in list(shares):
         signed_share = shares[shareholder_id]
-        result = json.loads(six.ensure_str(call_keyring("ConfirmUnlock", shareholder_id, signed_share)))
+        result = json.loads(call_keyring("ConfirmUnlock", shareholder_id, signed_share))
         if "success" in result:
             break
         elif "more_keys_needed" not in result:
-            print("Error! Exception returned: {}".format(result))
+            six.print_("Error! Exception returned: {}".format(result))
             exit(1)
     else:
-        print("Keyring is still locked")
+        six.print_("Keyring is still locked")
         exit(1)
 
 
 def get_state():
-    print(six.ensure_str(call_keyring("GetState"), encoding='utf-8'))
+    six.print_(call_keyring("GetState"))
 
 
 def main(argv):
@@ -99,14 +100,14 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "h", ["--help"])
     except getopt.GetoptError:
-        print(help_promt)
+        six.print_(help_promt)
         exit(2)
     for opt, arg in opts:
         if opt in ('-h', '--help'):
-            print(help_promt)
+            six.print_(help_promt)
             exit()
     if len(args) == 0:
-        print(help_promt)
+        six.print_(help_promt)
         exit(2)
     elif args[0] == 'init':
         init()
