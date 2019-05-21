@@ -1,20 +1,22 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import json
 import os
 import sys
 import getopt
 import subprocess
+import six
 
 
 def call(args, raw=False, stdin=""):
     if not raw:
         args = args.split(" ")
-    handler = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, encoding="utf-8")
+    handler = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     out, _err = handler.communicate(input=stdin)
     assert out is not None
     if handler.returncode != 0:
-        raise Exception(f"oops args {args} failed with code {handler.returncode}")
+        raise Exception("oops args {} failed with code {} and result {}"
+                        .format(args, handler.returncode, six.ensure_str(out)))
     return out
 
 
@@ -24,18 +26,23 @@ def call_keyring(func, *args):
     json_args = [json.dumps(arg) for arg in args]
     woorl_args = [
         "woorl", "-s", "cds_proto/proto/keyring.thrift",
-        f"http://{cds}:{thrift_port}/v2/keyring",
-        "Keyring", func, *json_args
-    ]
+        "http://{}:{}/v2/keyring".format(cds, thrift_port),
+        "Keyring", func
+    ] + json_args
     return call(woorl_args, raw=True)
 
 
 def decrypt_and_sign(shareholder_id, encrypted_share):
     decrypted_share = strip_line(
-        call(f"step crypto jwe decrypt --key {shareholder_id}.enc.json", stdin=encrypted_share)
+        six.ensure_str(
+            call("step crypto jwe decrypt --key {}.enc.json".format(shareholder_id),
+                 stdin=six.ensure_binary(encrypted_share)))
     )
     assert decrypted_share != ""
-    return strip_line(call(f"step crypto jws sign --key {shareholder_id}.sig.json -", stdin=decrypted_share))
+    return strip_line(
+        six.ensure_str(
+            call("step crypto jws sign --key {}.sig.json -".format(shareholder_id),
+                 stdin=six.ensure_binary(decrypted_share))))
 
 
 def strip_line(string):
@@ -45,7 +52,7 @@ def strip_line(string):
 
 
 def init():
-    encrypted_shares_json = call_keyring("StartInit", 2)
+    encrypted_shares_json = six.ensure_str(call_keyring("StartInit", 2))
 
     encrypted_mk_shares = json.loads(encrypted_shares_json)
     result = None
@@ -56,12 +63,12 @@ def init():
         shareholder_id = encrypted_mk_share['id']
         encrypted_share = encrypted_mk_share['encrypted_share']
         signed_share = decrypt_and_sign(shareholder_id, encrypted_share)
-        result = json.loads(call_keyring("ValidateInit", shareholder_id, signed_share))
+        result = json.loads(six.ensure_str(call_keyring("ValidateInit", shareholder_id, signed_share)))
         if "success" not in result and "more_keys_needed" not in result:
             print("Error! Exception returned: {}".format(result))
             exit(1)
         shares[shareholder_id] = signed_share
-    assert "success" in result, f"Last ValidateInit return not Success: {result}"
+    assert "success" in result, "Last ValidateInit return not Success: {}".format(result)
     print(json.dumps(shares))
 
 
@@ -72,7 +79,7 @@ def unlock():
 
     for shareholder_id in list(shares):
         signed_share = shares[shareholder_id]
-        result = json.loads(call_keyring("ConfirmUnlock", shareholder_id, signed_share))
+        result = json.loads(six.ensure_str(call_keyring("ConfirmUnlock", shareholder_id, signed_share)))
         if "success" in result:
             break
         elif "more_keys_needed" not in result:
@@ -84,7 +91,7 @@ def unlock():
 
 
 def get_state():
-    print(call_keyring("GetState"))
+    print(six.ensure_str(call_keyring("GetState"), encoding='utf-8'))
 
 
 def main(argv):
