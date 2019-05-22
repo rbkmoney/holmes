@@ -1,20 +1,59 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import json
 import os
 import sys
 import getopt
 import subprocess
+import six
+
+
+def ensure_binary(s, encoding='utf-8', errors='strict'):
+    """Coerce **s** to six.binary_type.
+    For Python 2:
+      - `unicode` -> encoded to `str`
+      - `str` -> `str`
+    For Python 3:
+      - `str` -> encoded to `bytes`
+      - `bytes` -> `bytes`
+    """
+    if isinstance(s, six.text_type):
+        return s.encode(encoding, errors)
+    elif isinstance(s, six.binary_type):
+        return s
+    else:
+        raise TypeError("not expecting type '%s'" % type(s))
+
+
+def ensure_str(s, encoding='utf-8', errors='strict'):
+    """Coerce *s* to `str`.
+    For Python 2:
+      - `unicode` -> encoded to `str`
+      - `str` -> `str`
+    For Python 3:
+      - `str` -> `str`
+      - `bytes` -> decoded to `str`
+    """
+    if not isinstance(s, (six.text_type, six.binary_type)):
+        raise TypeError("not expecting type '%s'" % type(s))
+    if six.PY2 and isinstance(s, six.text_type):
+        s = s.encode(encoding, errors)
+    elif six.PY3 and isinstance(s, six.binary_type):
+        s = s.decode(encoding, errors)
+    return s
 
 
 def call(args, raw=False, stdin=""):
     if not raw:
         args = args.split(" ")
-    handler = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, encoding="utf-8")
+    handler = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    stdin = ensure_binary(stdin)
     out, _err = handler.communicate(input=stdin)
     assert out is not None
+    out = ensure_str(out)
     if handler.returncode != 0:
-        raise Exception(f"oops args {args} failed with code {handler.returncode}")
+        raise Exception("oops args {} failed with code {} and result {}"
+                        .format(args, handler.returncode, out))
     return out
 
 
@@ -22,20 +61,24 @@ def call_keyring(func, *args):
     cds = os.environ["CDS"]
     thrift_port = os.environ["THRIFT_PORT"]
     json_args = [json.dumps(arg) for arg in args]
-    woorl_args = [
-        "woorl", "-s", "cds_proto/proto/keyring.thrift",
-        f"http://{cds}:{thrift_port}/v2/keyring",
-        "Keyring", func, *json_args
-    ]
+    woorl_args = \
+        [
+            "woorl", "-s", "cds_proto/proto/keyring.thrift",
+            "http://{}:{}/v2/keyring".format(cds, thrift_port),
+            "Keyring", func
+        ] + json_args
     return call(woorl_args, raw=True)
 
 
 def decrypt_and_sign(shareholder_id, encrypted_share):
     decrypted_share = strip_line(
-        call(f"step crypto jwe decrypt --key {shareholder_id}.enc.json", stdin=encrypted_share)
+        call("step crypto jwe decrypt --key {}.enc.json".format(shareholder_id),
+             stdin=encrypted_share)
     )
     assert decrypted_share != ""
-    return strip_line(call(f"step crypto jws sign --key {shareholder_id}.sig.json -", stdin=decrypted_share))
+    return strip_line(
+        call("step crypto jws sign --key {}.sig.json -".format(shareholder_id),
+             stdin=decrypted_share))
 
 
 def strip_line(string):
@@ -58,11 +101,11 @@ def init():
         signed_share = decrypt_and_sign(shareholder_id, encrypted_share)
         result = json.loads(call_keyring("ValidateInit", shareholder_id, signed_share))
         if "success" not in result and "more_keys_needed" not in result:
-            print("Error! Exception returned: {}".format(result))
+            six.print_("Error! Exception returned: {}".format(result))
             exit(1)
         shares[shareholder_id] = signed_share
-    assert "success" in result, f"Last ValidateInit return not Success: {result}"
-    print(json.dumps(shares))
+    assert "success" in result, "Last ValidateInit return not Success: {}".format(result)
+    six.print_(json.dumps(shares))
 
 
 def unlock():
@@ -76,15 +119,15 @@ def unlock():
         if "success" in result:
             break
         elif "more_keys_needed" not in result:
-            print("Error! Exception returned: {}".format(result))
+            six.print_("Error! Exception returned: {}".format(result))
             exit(1)
     else:
-        print("Keyring is still locked")
+        six.print_("Keyring is still locked")
         exit(1)
 
 
 def get_state():
-    print(call_keyring("GetState"))
+    six.print_(call_keyring("GetState"))
 
 
 def main(argv):
@@ -92,14 +135,14 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "h", ["--help"])
     except getopt.GetoptError:
-        print(help_promt)
+        six.print_(help_promt)
         exit(2)
     for opt, arg in opts:
         if opt in ('-h', '--help'):
-            print(help_promt)
+            six.print_(help_promt)
             exit()
     if len(args) == 0:
-        print(help_promt)
+        six.print_(help_promt)
         exit(2)
     elif args[0] == 'init':
         init()
