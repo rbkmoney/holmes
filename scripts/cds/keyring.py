@@ -8,14 +8,49 @@ import subprocess
 import six
 
 
+def ensure_binary(s, encoding='utf-8', errors='strict'):
+    """Coerce **s** to six.binary_type.
+    For Python 2:
+      - `unicode` -> encoded to `str`
+      - `str` -> `str`
+    For Python 3:
+      - `str` -> encoded to `bytes`
+      - `bytes` -> `bytes`
+    """
+    if isinstance(s, six.text_type):
+        return s.encode(encoding, errors)
+    elif isinstance(s, six.binary_type):
+        return s
+    else:
+        raise TypeError("not expecting type '%s'" % type(s))
+
+
+def ensure_str(s, encoding='utf-8', errors='strict'):
+    """Coerce *s* to `str`.
+    For Python 2:
+      - `unicode` -> encoded to `str`
+      - `str` -> `str`
+    For Python 3:
+      - `str` -> `str`
+      - `bytes` -> decoded to `str`
+    """
+    if not isinstance(s, (six.text_type, six.binary_type)):
+        raise TypeError("not expecting type '%s'" % type(s))
+    if six.PY2 and isinstance(s, six.text_type):
+        s = s.encode(encoding, errors)
+    elif six.PY3 and isinstance(s, six.binary_type):
+        s = s.decode(encoding, errors)
+    return s
+
+
 def call(args, raw=False, stdin=""):
     if not raw:
         args = args.split(" ")
     handler = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-    stdin = six.ensure_binary(stdin)
+    stdin = ensure_binary(stdin)
     out, _err = handler.communicate(input=stdin)
     assert out is not None
-    out = six.ensure_str(out)
+    out = ensure_str(out)
     if handler.returncode != 0:
         raise Exception("oops args {} failed with code {} and result {}"
                         .format(args, handler.returncode, out))
