@@ -13,9 +13,10 @@ ENV THRIFT_PORT=8022 \
     PROXY_MOCKETBANK=proxy-mocketbank \
     PROXY_MOCKET_INSPECTOR=proxy-inspector \
     PROXY_PIMP=pimp
-COPY ./damsel/proto /opt/holmes/damsel/proto
-COPY ./scripts      /opt/holmes/scripts
-#COPY ./lib/scripts  /opt/holmes/scripts
+COPY ./damsel/proto    /opt/holmes/damsel/proto
+COPY ./cds_proto/proto /opt/holmes/cds_proto/proto
+COPY ./scripts         /opt/holmes/scripts
+#COPY ./lib/scripts     /opt/holmes/scripts
 CMD epmd
 # A bit of magic below to get a proper branch name
 # even when the HEAD is detached (Hey Jenkins!
