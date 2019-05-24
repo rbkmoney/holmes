@@ -1,14 +1,9 @@
 REBAR := $(shell which rebar3 2>/dev/null || which ./rebar3)
 RELDIR := $(CURDIR)/scripts
 
-.PHONY: all party_migration_script observer_cli
+.PHONY: all observer_cli
 
-all: party_migration_script observer_cli
-
-party_migration_script:
-	$(MAKE) -C $@
-	mkdir -p $(RELDIR)/hellgate
-	cp $@/_build/default/bin/migration $(RELDIR)/hellgate/party-migration
+all: observer_cli
 
 observer_cli:
 	cd $@ && $(REBAR) as inet6 escriptize
