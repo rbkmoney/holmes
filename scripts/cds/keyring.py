@@ -72,12 +72,12 @@ def call_keyring(func, *args):
 
 def decrypt_and_sign(shareholder_id, encrypted_share):
     decrypted_share = strip_line(
-        call("scripts/cds/step crypto jwe decrypt --key scripts/cds/{}.enc.json".format(shareholder_id),
+        call("step crypto jwe decrypt --key scripts/cds/{}.enc.json".format(shareholder_id),
              stdin=encrypted_share)
     )
     assert decrypted_share != ""
     return strip_line(
-        call("scripts/cds/step crypto jws sign --key scripts/cds/{}.sig.json -".format(shareholder_id),
+        call("step crypto jws sign --key scripts/cds/{}.sig.json -".format(shareholder_id),
              stdin=decrypted_share))
 
 

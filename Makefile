@@ -10,10 +10,10 @@ SERVICE_IMAGE_PUSH_TAG ?= $(SERVICE_IMAGE_TAG)
 
 # Base image for the service
 BASE_IMAGE_NAME := build
-BASE_IMAGE_TAG := 9d4d70317dd08abd400798932a231798ee254a87
+BASE_IMAGE_TAG := accaf81566fd3ad14bc6eadb26375ca83e76038f
 
 # Build image tag to be used
-BUILD_IMAGE_TAG := 9d4d70317dd08abd400798932a231798ee254a87
+BUILD_IMAGE_TAG := accaf81566fd3ad14bc6eadb26375ca83e76038f
 
 CALL_ANYWHERE := all submodules lib
 
