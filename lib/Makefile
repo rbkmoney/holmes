@@ -1,7 +1,7 @@
 REBAR := $(shell which rebar3 2>/dev/null || which ./rebar3)
 RELDIR := $(CURDIR)/scripts
 
-.PHONY: all party_migration_script observer_cli
+.PHONY: all observer_cli
 
 all: observer_cli
 
