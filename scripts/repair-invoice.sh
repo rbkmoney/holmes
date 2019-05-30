@@ -13,7 +13,6 @@ Usage: ${SCRIPTNAME} [--force] [--set-timeout SEC | --set-deadline TS | --unset-
   --set-timeout        To set timer to this number of seconds
   --set-deadline       To set timer to this time instant (RFC3339 timestamp)
   --unset-timer        To unset any pending timer (not an error if no timer is set)
-  --remove             To remove machine altogether
   --force              To force appending changeset (which in effect turns state transitions validation off)
 
 More information:
@@ -29,7 +28,7 @@ function usage {
 getopt -T
 [ $? != 4 ] && { err "Please provide modern GNU getopt implementation."; }
 
-TEMP=$(getopt -o "" --long force,set-timeout:,set-deadline:,unset-timer,remove -n "${SCRIPTNAME}" -- "$@")
+TEMP=$(getopt -o "" --long force,set-timeout:,set-deadline:,unset-timer -n "${SCRIPTNAME}" -- "$@")
 [ $? != 0 ] && usage
 
 eval set -- "${TEMP}"
@@ -41,7 +40,6 @@ while true; do
     --set-timeout  ) ACTION="{\"timer\":{\"set_timer\":{\"timer\":{\"timeout\":$2}}}}"  ; shift 2 ;;
     --set-deadline ) ACTION="{\"timer\":{\"set_timer\":{\"timer\":{\"deadline\":$2}}}}" ; shift 2 ;;
     --unset-timer  ) ACTION="{\"timer\":{\"unset_timer\":{}}}"                          ; shift 1 ;;
-    --remove       ) ACTION="{\"remove\":{}}"                                           ; shift 1 ;;
     --             ) shift 1 ; break ;;
     *              ) break ;;
   esac
