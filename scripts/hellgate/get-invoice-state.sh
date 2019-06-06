@@ -5,7 +5,7 @@
 SCRIPTNAME=$(basename $0)
 
 get_state () {
-    woorl $3 \
+    ${WOORL:-woorl} \
         -s damsel/proto/payment_processing.thrift \
         http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing \
         Invoicing Get "$1" "$2"
@@ -27,6 +27,6 @@ case "$1" in
         USERINFO="{\"id\":\"${SCRIPTNAME}\",\"type\":{\"service_user\":{}}}"
         INVOICE_ID="\"$1\""
         shift 1
-        get_state "$USERINFO" "$INVOICE_ID" "$*"
+        get_state "$USERINFO" "$INVOICE_ID"
         ;;
 esac

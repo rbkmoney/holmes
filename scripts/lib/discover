@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Just `source` it in your favourite shell
+
+CONSUL="http://consul1.bst1.rbkmoney.net:8500"
+
+function discover {
+  curl -s "${CONSUL}/v1/catalog/service/${1}" | jq -r '.[0].ServiceAddress'
+}
+
+echo "export MACHINEGUN=[$(discover 'machinegun')]"
+echo "export HELLGATE=[$(discover 'hellgate')]"
+echo "export SHUMWAY=[$(discover 'shumway')]"
