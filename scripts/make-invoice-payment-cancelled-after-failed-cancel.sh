@@ -74,4 +74,4 @@ END
 )
 
 # Then we should stuff it with previously reconstructed history
-./repair-invoice.sh "${INVOICE}" "${CHANGES}"
+"$CWD/repair-invoice.sh" "${INVOICE}" "${CHANGES}"
