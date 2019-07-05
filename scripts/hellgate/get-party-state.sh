@@ -1,13 +1,16 @@
 #!/bin/bash
 
+CWD="$(dirname $0)"
+DAMSEL="${CWD}/../../damsel"
+
 [ -f woorlrc ] && source woorlrc
 
 SCRIPTNAME=$(basename $0)
 
 get_party () {
-    woorl $3 \
-        -s damsel/proto/payment_processing.thrift \
-        http://${HELLGATE:-hellgate}:8022/v1/processing/partymgmt \
+    "${WOORL:-woorl}" $3 \
+        -s "${DAMSEL}/proto/payment_processing.thrift" \
+        "http://${HELLGATE:-hellgate}:8022/v1/processing/partymgmt" \
         PartyManagement Get "$1" "$2"
 }
 

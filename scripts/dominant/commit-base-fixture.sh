@@ -2,6 +2,8 @@
 
 set -e
 
+CWD="$(dirname $0)"
+DAMSEL="${CWD}/../../damsel"
 SCRIPTNAME=$(basename $0)
 
 export CURDIR="$(dirname ${0})"
@@ -20,9 +22,9 @@ case "$1" in
         exit 0
         ;;
     * )
-        FIXTURE="$(${LIBDIR}/template.sh ${CURDIR}/base-fixture.commit.json.tpl $*)"
-        woorl $* \
-            -s damsel/proto/domain_config.thrift \
-            http://${DOMINANT:-dominant}:8022/v1/domain/repository \
+        FIXTURE=$("${LIBDIR}/template.sh" "${CURDIR}/base-fixture.commit.json.tpl" $*)
+        "${WOORL:-woorl}" $* \
+            -s "${DAMSEL}/proto/domain_config.thrift" \
+            "http://${DOMINANT:-dominant}:8022/v1/domain/repository" \
             Repository Commit 0 "${FIXTURE}"
 esac

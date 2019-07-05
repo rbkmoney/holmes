@@ -1,5 +1,8 @@
 #!/bin/bash
 
+CWD="$(dirname $0)"
+DAMSEL="${CWD}/../damsel"
+
 USAGE=$(cat <<EOF
 Usage: ${SCRIPTNAME} plan-id batch-id
   Shows a plan batch given a plan-id and a batch-id.
@@ -26,6 +29,6 @@ BATCHID="${2}"
 
 ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
 
-${WOORL:-woorl} -s damsel/proto/accounter.thrift \
-    ${ACCOUNTER} Accounter GetPlan "\"${PLANID}\"" | \
+"${WOORL:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
+    "${ACCOUNTER}" Accounter GetPlan "\"${PLANID}\"" | \
       jq ".batch_list[] | select(.id == ${BATCHID})"
