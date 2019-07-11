@@ -35,7 +35,7 @@ case ${INVOICE} in
     ;;
 esac
 
-INVOICE_EVENTS=$(${CWD}/hellgate/get-invoice-events.sh ${INVOICE})
+INVOICE_EVENTS=$("${CWD}/hellgate/get-invoice-events.sh" "${INVOICE}")
 LAST_CHANGE=$(echo "${INVOICE_EVENTS}" | jq '.[-1].payload.invoice_changes[-1].invoice_payment_change')
 
 PAYMENT=$(echo "${LAST_CHANGE}" | jq -r '.id')
@@ -115,4 +115,4 @@ END
 )
 
 # Then we should stuff it with previously reconstructed history
-./repair-invoice.sh "${INVOICE}" "${CHANGES}"
+"${CWD}/repair-invoice.sh" "${INVOICE}" "${CHANGES}"

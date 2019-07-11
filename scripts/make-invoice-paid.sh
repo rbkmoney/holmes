@@ -39,7 +39,7 @@ END
 )
 
 # First we need to explicitly make invoice failed again. Amen.
-./fail-machine.sh "${INVOICE}"
+"${CWD}/fail-machine.sh" "${INVOICE}"
 
 # Then we should stuff it with previously reconstructed history
-./repair-invoice.sh "${INVOICE}" "${CHANGES}"
+"${CWD}/repair-invoice.sh" "${INVOICE}" "${CHANGES}"

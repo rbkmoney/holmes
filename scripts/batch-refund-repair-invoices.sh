@@ -22,13 +22,13 @@ for line in $(cat "${BATCH}"); do
   currency=$(echo "${line}" | jq -r '.currency')
 
   info "Refunding $(em $amount $currency) @ payment $(em $payment) on invoice $(em $invoice) ..."
-  ./refund-invoice-payment.sh $invoice $payment $amount $currency
+  "${CWD}/refund-invoice-payment.sh" "$invoice" "$payment" "$amount" "$currency"
   echo
 
   sleep 3
 
   info "Repairing refund @ payment $(em $payment) on $(em $invoice) ..."
-  ./make-invoice-payment-refunded.sh $invoice $payment
+  "${CWD}/make-invoice-payment-refunded.sh" "$invoice" "$payment"
   echo
 
 done

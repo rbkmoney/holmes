@@ -1,5 +1,8 @@
 #!/bin/bash
 
+CWD="$(dirname $0)"
+MGPROTO="${CWD}/../mgproto"
+
 USAGE=$(cat <<EOF
 Usage: ${SCRIPTNAME} id [ns]
   Fails a machine. Exploits the fact that most if not all already implemented
@@ -40,7 +43,7 @@ CALLARGS=$(cat <<END
 END
 )
 
-${WOORL:-woorl} -s mgproto/proto/state_processing.thrift \
+"${WOORL:-woorl}" -s "${MGPROTO}/proto/state_processing.thrift" \
     "http://${MACHINEGUN:-machinegun}:8022/v1/automaton" \
     Automaton Call "${MACHINEDESC}" "${CALLARGS}" \
       | grep -sqF 'MachineFailed'

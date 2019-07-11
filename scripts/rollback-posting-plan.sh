@@ -1,5 +1,8 @@
 #!/bin/bash
 
+CWD="$(dirname $0)"
+DAMSEL="${CWD}/../damsel"
+
 USAGE=$(cat <<EOF
 Usage: ${SCRIPTNAME} plan-id batch
   Prepares and then rolls back a plan made up of the single posting batch provided by
@@ -27,9 +30,9 @@ BATCH="${2}"
 
 ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
 
-${WOORL:-woorl} -s damsel/proto/accounter.thrift \
-    ${ACCOUNTER} Accounter Hold \
+"${WOORL:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
+    "${ACCOUNTER}" Accounter Hold \
     "{\"id\": \"${PLANID}\", \"batch\": ${BATCH}}" && \
-${WOORL:-woorl} -s damsel/proto/accounter.thrift \
-    ${ACCOUNTER}  Accounter RollbackPlan \
+"${WOORL:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
+    "${ACCOUNTER}"  Accounter RollbackPlan \
     "{\"id\": \"${PLANID}\", \"batch_list\": [${BATCH}]}"

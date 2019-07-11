@@ -38,7 +38,7 @@ REFUND="${3}"
 # END
 # )
 
-STATE="$(${CWD}/hellgate/get-invoice-state.sh ${INVOICE})"
+STATE=$("${CWD}/hellgate/get-invoice-state.sh" "${INVOICE}")
 
 info "Going on with payment $(em ${PAYMENT}) ..."
 
@@ -133,4 +133,4 @@ END
 )
 
 # Then we should stuff it with previously reconstructed history
-${CWD}/repair-invoice.sh "${INVOICE}" "${CHANGES}"
+"${CWD}/repair-invoice.sh" "${INVOICE}" "${CHANGES}"

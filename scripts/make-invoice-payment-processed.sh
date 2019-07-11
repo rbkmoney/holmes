@@ -43,7 +43,7 @@ esac
 
 
 LAST_CHANGE=$(
-  ${CWD}/hellgate/get-invoice-events.sh ${INVOICE} |
+  "${CWD}/hellgate/get-invoice-events.sh" "${INVOICE}" |
     jq '.[-1].payload.invoice_changes[-1].invoice_payment_change'
 )
 
@@ -139,4 +139,4 @@ END
 )
 
 # Then we should stuff it with previously reconstructed history
-./repair-invoice.sh "${INVOICE}" "${CHANGES}"
+"${CWD}/repair-invoice.sh" "${INVOICE}" "${CHANGES}"

@@ -1,14 +1,17 @@
 #!/bin/bash
 
+CWD="$(dirname $0)"
+DAMSEL="${CWD}/../../damsel"
+
 [ -f woorlrc ] && source woorlrc
 
 SCRIPTNAME=$(basename $0)
 
 get_events () {
-    ${WOORL:-woorl} \
-        -s damsel/proto/payment_processing.thrift \
-        http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing \
-        Invoicing GetEvents $1 $2 $3
+    "${WOORL:-woorl}" \
+        -s "${DAMSEL}/proto/payment_processing.thrift" \
+        "http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing" \
+        Invoicing GetEvents "$1" "$2" "$3"
 }
 
 case "$1" in
