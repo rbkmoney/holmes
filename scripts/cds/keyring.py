@@ -65,7 +65,7 @@ def call_keyring(func, *args):
         [
             "woorl", "-s", "cds_proto/proto/keyring.thrift",
             "http://{}:{}/v2/keyring".format(cds, thrift_port),
-            "Keyring", func
+            "KeyringManagement", func
         ] + json_args
     return call(woorl_args, raw=True)
 
@@ -98,8 +98,11 @@ def init():
     for encrypted_mk_share in encrypted_mk_shares:
         shareholder_id = encrypted_mk_share['id']
         encrypted_share = encrypted_mk_share['encrypted_share']
-        signed_share = decrypt_and_sign(shareholder_id, encrypted_share)
-        result = json.loads(call_keyring("ValidateInit", shareholder_id, signed_share))
+        signed_share = {
+            "id": shareholder_id,
+            "signed_share": decrypt_and_sign(shareholder_id, encrypted_share)
+        }
+        result = json.loads(call_keyring("ValidateInit", signed_share))
         if "success" not in result and "more_keys_needed" not in result:
             six.print_("Error! Exception returned: {}".format(result))
             exit(1)
@@ -114,8 +117,11 @@ def unlock():
     call_keyring("StartUnlock")
 
     for shareholder_id in list(shares):
-        signed_share = shares[shareholder_id]
-        result = json.loads(call_keyring("ConfirmUnlock", shareholder_id, signed_share))
+        signed_share = {
+            "id": shareholder_id,
+            "signed_share": shares[shareholder_id]
+        }
+        result = json.loads(call_keyring("ConfirmUnlock", signed_share))
         if "success" in result:
             break
         elif "more_keys_needed" not in result:
