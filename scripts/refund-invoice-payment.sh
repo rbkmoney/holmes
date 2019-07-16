@@ -34,7 +34,7 @@ USERINFO=$(jq -nc "{id:\"${SCRIPTNAME}\", type:{service_user:{}}}")
 
 [ -f woorlrc ] && source woorlrc
 
-"${WOORL:-woorl}" \
+${WOORL:-woorl} \
     -s "${DAMSEL}/proto/payment_processing.thrift" \
     "http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing" \
     Invoicing RefundPayment "${USERINFO}" "\"${INVOICE}\"" "\"${PAYMENT}\"" "${PARAMS}"

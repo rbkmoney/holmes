@@ -43,7 +43,7 @@ CALLARGS=$(cat <<END
 END
 )
 
-"${WOORL:-woorl}" -s "${MGPROTO}/proto/state_processing.thrift" \
+${WOORL:-woorl} -s "${MGPROTO}/proto/state_processing.thrift" \
     "http://${MACHINEGUN:-machinegun}:8022/v1/automaton" \
     Automaton Call "${MACHINEDESC}" "${CALLARGS}" \
       | grep -sqF 'MachineFailed'

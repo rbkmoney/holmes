@@ -9,7 +9,7 @@ MACHINE_NS="\"${1}\""
 MACHINE_ID="{\"id\":\"${2}\"}"
 shift 2
 
-"${WOORL:-woorl}" $* \
+${WOORL:-woorl} $* \
     -s "${MGPROTO}/proto/state_processing.thrift" \
     "http://${MACHINEGUN:-machinegun}:8022/v1/automaton" \
     Automaton Repair "${MACHINE_NS}" "${MACHINE_ID}" \
