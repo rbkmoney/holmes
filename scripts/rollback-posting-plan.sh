@@ -30,9 +30,9 @@ BATCH="${2}"
 
 ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
 
-${WOORL:-woorl} -s "${DAMSEL}/proto/accounter.thrift" \
+"${WOORL[@]:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
     "${ACCOUNTER}" Accounter Hold \
     "{\"id\": \"${PLANID}\", \"batch\": ${BATCH}}" && \
-${WOORL:-woorl} -s "${DAMSEL}/proto/accounter.thrift" \
+"${WOORL[@]:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
     "${ACCOUNTER}"  Accounter RollbackPlan \
     "{\"id\": \"${PLANID}\", \"batch_list\": [${BATCH}]}"

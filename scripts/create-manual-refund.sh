@@ -51,7 +51,7 @@ fi
 
 [ -f woorlrc ] && source woorlrc
 
-${WOORL:-woorl} \
+"${WOORL[@]:-woorl}" \
     -s "${DAMSEL}/proto/payment_processing.thrift" \
     "http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing" \
     Invoicing CreateManualRefund "${USERINFO}" "\"${INVOICE_ID}\"" "\"${PAYMENT_ID}\"" "${PARAMS}"

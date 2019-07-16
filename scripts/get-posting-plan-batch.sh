@@ -29,6 +29,6 @@ BATCHID="${2}"
 
 ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
 
-${WOORL:-woorl} -s "${DAMSEL}/proto/accounter.thrift" \
+"${WOORL[@]:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
     "${ACCOUNTER}" Accounter GetPlan "\"${PLANID}\"" | \
       jq ".batch_list[] | select(.id == ${BATCHID})"

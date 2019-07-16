@@ -8,7 +8,7 @@ DAMSEL="${CWD}/../../damsel"
 SCRIPTNAME=$(basename $0)
 
 get_party () {
-    ${WOORL:-woorl} $3 \
+    "${WOORL[@]:-woorl}" $3 \
         -s "${DAMSEL}/proto/payment_processing.thrift" \
         "http://${HELLGATE:-hellgate}:8022/v1/processing/partymgmt" \
         PartyManagement Get "$1" "$2"

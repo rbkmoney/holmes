@@ -55,7 +55,7 @@ INVOICE_CHANGES="${2}"
 
 USERINFO='{"id":"woorl","type":{"service_user":{}}}'
 
-${WOORL:-woorl} \
+"${WOORL[@]:-woorl}" \
     -s "${DAMSEL}/proto/payment_processing.thrift" \
     "http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing" \
     Invoicing Repair "${USERINFO}" "\"${INVOICE}\"" "${INVOICE_CHANGES}" "${ACTION}" "${PARAMS}"

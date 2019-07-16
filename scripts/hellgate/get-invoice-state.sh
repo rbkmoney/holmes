@@ -8,7 +8,7 @@ DAMSEL="${CWD}/../../damsel"
 SCRIPTNAME=$(basename $0)
 
 get_state () {
-    ${WOORL:-woorl} \
+    "${WOORL[@]:-woorl}" \
         -s "${DAMSEL}/proto/payment_processing.thrift" \
         "http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing" \
         Invoicing Get "$1" "$2"
