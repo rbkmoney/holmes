@@ -1,1 +1,1 @@
-WOORL="woorl -v --deadline 30s"
+WOORL=(woorl -v --deadline 30s)
