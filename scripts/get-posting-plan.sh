@@ -8,11 +8,9 @@ CWD="$(dirname $0)"
 DAMSEL="${CWD}/../damsel"
 
 USAGE=$(cat <<EOF
-Usage: ${SCRIPTNAME} plan-id batch
-  Prepares and commits a plan made up of the single posting batch provided by
-  the user.
+Usage: ${SCRIPTNAME} plan-id
+  Shows a plan given a plan-id
   plan-id     Posting plan ID (string)
-  batch       Posting batch (json object, see [2])
 
 More information:
   [1]: https://github.com/rbkmoney/damsel
@@ -29,14 +27,8 @@ function usage {
 
 PLANID="${1}"
 [ -z "${PLANID}" ] && usage
-BATCH="${2}"
-[ -z "${BATCH}" ]  && usage
 
 ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
 
 "${WOORL[@]:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
-    "${ACCOUNTER}" Accounter Hold \
-    "{\"id\": \"${PLANID}\", \"batch\": ${BATCH}}" && \
-"${WOORL[@]:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
-    "${ACCOUNTER}"  Accounter CommitPlan \
-    "{\"id\": \"${PLANID}\", \"batch_list\": [${BATCH}]}"
+    "${ACCOUNTER}" Accounter GetPlan "\"${PLANID}\""

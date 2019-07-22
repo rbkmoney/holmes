@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -o errexit
+set -o pipefail
+set -o errtrace
+
 CWD="$(dirname $0)"
 DAMSEL="${CWD}/../damsel"
 
@@ -29,6 +33,5 @@ BATCHID="${2}"
 
 ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
 
-"${WOORL[@]:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
-    "${ACCOUNTER}" Accounter GetPlan "\"${PLANID}\"" | \
+"${CWD}/get-posting-plan.sh" "${PLANID}" | \
       jq ".batch_list[] | select(.id == ${BATCHID})"
