@@ -35,16 +35,16 @@ INVOICE_EVENTS=$("${CWD}/hellgate/get-invoice-events.sh" "${INVOICE}")
 
 LAST_PAYMENT_CHANGE=$(
   echo "${INVOICE_EVENTS}" |
-    jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\")" |
-    jq --slurp '.[-1]'
+  jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\")" |
+  jq --slurp '.[-1]'
 )
 
 ARE_ALL_PAYMENTS_FAILED=$(
   echo "${INVOICE_EVENTS}" |
-    jq ".[] | .payload.invoice_changes | .[] | .invoice_payment_change | select(.payload |
-        has(\"invoice_payment_status_changed\"))" |
-    jq --slurp 'group_by(.id) | .[] | .[-1].payload.invoice_payment_status_changed.status | keys |
-        all( . == "failed" )'
+  jq ".[] | .payload.invoice_changes | .[] | .invoice_payment_change | select(.payload |
+      has(\"invoice_payment_status_changed\"))" |
+  jq --slurp 'group_by(.id) | .[] | .[-1].payload.invoice_payment_status_changed.status | keys |
+      all( . == "failed" )'
 )
 
 if [ "${LAST_PAYMENT_CHANGE}" = "null" ]; then
@@ -76,11 +76,11 @@ PLAN_BATCH=$(echo "${PAYMENT_ACCOUNTER_PLAN}" | jq ".batch_list | .[0]")
 
 SESSIONS_NUMBER=$(
   echo "${INVOICE_EVENTS}" |
-    jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\") |
-        select(.invoice_payment_change.payload | has(\"invoice_payment_session_change\")) |
-        .invoice_payment_change.payload.invoice_payment_session_change.payload |
-        select(has(\"session_started\"))"
-    | jq --slurp 'length'
+  jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\") |
+      select(.invoice_payment_change.payload | has(\"invoice_payment_session_change\")) |
+      .invoice_payment_change.payload.invoice_payment_session_change.payload |
+      select(has(\"session_started\"))" |
+  jq --slurp 'length'
 )
 
 if [ \
@@ -91,9 +91,9 @@ fi
 
 PAYMENT_SESSION_EVENTS=$(
   echo "${INVOICE_EVENTS}" |
-    jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\") |
-        select(.invoice_payment_change.payload | has(\"invoice_payment_session_change\"))" |
-    jq --slurp '.'
+  jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\") |
+      select(.invoice_payment_change.payload | has(\"invoice_payment_session_change\"))" |
+  jq --slurp '.'
 )
 
 NEW_SESSION_FINISH=$(cat <<END
