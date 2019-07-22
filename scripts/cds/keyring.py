@@ -137,7 +137,8 @@ def get_state(cds_address):
 
 def main(argv):
     address = os.environ["CDS"]
-    help_promt = "usage: keyring.py {init | unlock | state} [-h | --help]"
+    help_promt = "usage: keyring.py {init | unlock | state}" \
+                 " [-h | --help  | -a <woorl address>| --address <woorl address>]"
     try:
         opts, args = getopt.getopt(argv, "ha:", ["help", "address="])
     except getopt.GetoptError:
