@@ -34,13 +34,13 @@ esac
 INVOICE_EVENTS=$("${CWD}/hellgate/get-invoice-events.sh" "${INVOICE}")
 
 LAST_PAYMENT_CHANGE=$(
-  echo ""${INVOICE_EVENTS}"" |
+  echo "${INVOICE_EVENTS}" |
     jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\")" |
     jq --slurp '.[-1]'
 )
 
 ARE_ALL_PAYMENTS_FAILED=$(
-  echo ""${INVOICE_EVENTS}"" |
+  echo "${INVOICE_EVENTS}" |
     jq ".[] | .payload.invoice_changes | .[] | .invoice_payment_change | select(.payload |
         has(\"invoice_payment_status_changed\"))" |
     jq --slurp 'group_by(.id) | .[] | .[-1].payload.invoice_payment_status_changed.status | keys |
@@ -90,7 +90,7 @@ if [ \
 fi
 
 PAYMENT_SESSION_EVENTS=$(
-  echo ""${INVOICE_EVENTS}"" |
+  echo "${INVOICE_EVENTS}" |
     jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\") |
         select(.invoice_payment_change.payload | has(\"invoice_payment_session_change\"))" |
     jq --slurp '.'
