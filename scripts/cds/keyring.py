@@ -57,14 +57,13 @@ def call(args, raw=False, stdin=""):
     return out
 
 
-def call_keyring(func, *args):
-    cds = os.environ["CDS"]
+def call_keyring(cds_address, func, *args):
     thrift_port = os.environ["THRIFT_PORT"]
     json_args = [json.dumps(arg) for arg in args]
     woorl_args = \
         [
             "woorl", "-s", "cds_proto/proto/keyring.thrift",
-            "http://{}:{}/v2/keyring".format(cds, thrift_port),
+            "http://{}:{}/v2/keyring".format(cds_address, thrift_port),
             "KeyringManagement", func
         ] + json_args
     return call(woorl_args, raw=True)
@@ -87,8 +86,8 @@ def strip_line(string):
     return result
 
 
-def init():
-    encrypted_shares_json = call_keyring("StartInit", 2)
+def init(cds_address):
+    encrypted_shares_json = call_keyring(cds_address, "StartInit", 2)
 
     encrypted_mk_shares = json.loads(encrypted_shares_json)
     result = None
@@ -102,7 +101,7 @@ def init():
             "id": shareholder_id,
             "signed_share": decrypt_and_sign(shareholder_id, encrypted_share)
         }
-        result = json.loads(call_keyring("ValidateInit", signed_share))
+        result = json.loads(call_keyring(cds_address, "ValidateInit", signed_share))
         if "success" not in result and "more_keys_needed" not in result:
             six.print_("Error! Exception returned: {}".format(result))
             exit(1)
@@ -111,17 +110,17 @@ def init():
     six.print_(json.dumps(shares))
 
 
-def unlock():
+def unlock(cds_address):
     shares = json.loads(sys.stdin.read())
 
-    call_keyring("StartUnlock")
+    call_keyring(cds_address, "StartUnlock")
 
     for shareholder_id in list(shares):
         signed_share = {
             "id": shareholder_id,
             "signed_share": shares[shareholder_id]
         }
-        result = json.loads(call_keyring("ConfirmUnlock", signed_share))
+        result = json.loads(call_keyring(cds_address, "ConfirmUnlock", signed_share))
         if "success" in result:
             break
         elif "more_keys_needed" not in result:
@@ -132,14 +131,16 @@ def unlock():
         exit(1)
 
 
-def get_state():
-    six.print_(call_keyring("GetState"))
+def get_state(cds_address):
+    six.print_(call_keyring(cds_address, "GetState"))
 
 
 def main(argv):
-    help_promt = "usage: keyring.py {init | unlock | state} [-h | --help]"
+    address = os.environ["CDS"]
+    help_promt = "usage: keyring.py {init | unlock | state}" \
+                 " [-h | --help  | -a <woorl address>| --address <woorl address>]"
     try:
-        opts, args = getopt.getopt(argv, "h", ["--help"])
+        opts, args = getopt.getopt(argv, "ha:", ["help", "address="])
     except getopt.GetoptError:
         six.print_(help_promt)
         exit(2)
@@ -147,15 +148,17 @@ def main(argv):
         if opt in ('-h', '--help'):
             six.print_(help_promt)
             exit()
+        if opt in ('-a', '--address'):
+            address = arg
     if len(args) == 0:
         six.print_(help_promt)
         exit(2)
     elif args[0] == 'init':
-        init()
+        init(address)
     elif args[0] == 'unlock':
-        unlock()
+        unlock(address)
     elif args[0] == 'state':
-        get_state()
+        get_state(address)
 
 
 if __name__ == "__main__":
