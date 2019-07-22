@@ -34,13 +34,13 @@ esac
 INVOICE_EVENTS=$("${CWD}/hellgate/get-invoice-events.sh" "${INVOICE}")
 
 LAST_PAYMENT_CHANGE=$(
-  echo "$INVOICE_EVENTS" |
+  echo ""${INVOICE_EVENTS}"" |
     jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\")" |
     jq --slurp '.[-1]'
 )
 
 ARE_ALL_PAYMENTS_FAILED=$(
-  echo "$INVOICE_EVENTS" |
+  echo ""${INVOICE_EVENTS}"" |
     jq ".[] | .payload.invoice_changes | .[] | .invoice_payment_change | select(.payload |
         has(\"invoice_payment_status_changed\"))" |
     jq --slurp 'group_by(.id) | .[] | .[-1].payload.invoice_payment_status_changed.status | keys |
@@ -67,16 +67,16 @@ fi
 PAYMENT_ACCOUNTER_PLAN=$("${CWD}"/get-posting-plan.sh "${INVOICE}.${PAYMENT}")
 
 if [ \
-  $(echo "$PAYMENT_ACCOUNTER_PLAN" | jq '.batch_list | length') != "1"\
+  $(echo "${PAYMENT_ACCOUNTER_PLAN}" | jq '.batch_list | length') != "1" \
 ]; then
   err "It seems like the payment has an unexpected postings plan configuration"
 fi
 
-PLAN_BATCH=$(echo "$PAYMENT_ACCOUNTER_PLAN" | jq ".batch_list | .[0]")
+PLAN_BATCH=$(echo "${PAYMENT_ACCOUNTER_PLAN}" | jq ".batch_list | .[0]")
 
 SESSIONS_NUMBER=$(
-  echo "$INVOICE_EVENTS" |
-    jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"PAYMENT\") |
+  echo "${INVOICE_EVENTS}" |
+    jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\") |
         select(.invoice_payment_change.payload | has(\"invoice_payment_session_change\")) |
         .invoice_payment_change.payload.invoice_payment_session_change.payload |
         select(has(\"session_started\"))"
@@ -84,14 +84,14 @@ SESSIONS_NUMBER=$(
 )
 
 if [ \
-  "${SESSIONS_NUMBER}" != "1"\
+  "${SESSIONS_NUMBER}" != "1" \
 ]; then
   err "It seems like the payment has multiple sessions"
 fi
 
 PAYMENT_SESSION_EVENTS=$(
-  echo "$INVOICE_EVENTS" |
-    jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"PAYMENT\") |
+  echo ""${INVOICE_EVENTS}"" |
+    jq ".[] | .payload.invoice_changes | .[] | select(.invoice_payment_change.id == \"${PAYMENT}\") |
         select(.invoice_payment_change.payload | has(\"invoice_payment_session_change\"))" |
     jq --slurp '.'
 )
