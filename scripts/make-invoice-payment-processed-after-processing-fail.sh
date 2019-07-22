@@ -47,12 +47,18 @@ ARE_ALL_PAYMENTS_FAILED=$(
         all( . == "failed" )'
 )
 
+if ["${LAST_PAYMENT_CHANGE}" = "null"]; then
+  err "Unknown payment ${PAYMENT}"
+fi
+
 if [ \
-  "${LAST_PAYMENT_CHANGE}" = "null" -o \
-  "$(echo "${LAST_CHANGE}" | jq '.payload.invoice_payment_status_changed.status | has("failed")')" != "true" -o \
-  "${ARE_ALL_PAYMENTS_FAILED}" != "true" \
+  "$(echo "${LAST_CHANGE}" | jq '.payload.invoice_payment_status_changed.status | has("failed")')" != "true" \
 ]; then
-  err "Last seen payment change looks wrong for this repair scenario"
+  err "The payment ${PAYMENT} does not failed"
+fi
+
+if ["${ARE_ALL_PAYMENTS_FAILED}" != "true"]; then
+  err "No all payments in this invoice are failed"
 fi
 
 PAYMENT_ACCOUNTER_PLAN=$("${CWD}"/get-posting-plan.sh "${INVOICE}.${PAYMENT}")
