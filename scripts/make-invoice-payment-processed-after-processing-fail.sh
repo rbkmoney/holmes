@@ -51,8 +51,11 @@ if [ "${LAST_PAYMENT_CHANGE}" = "null" ]; then
   err "Unknown payment ${PAYMENT}"
 fi
 
+LAST_PAYMENT_STATUS=$(
+  echo "${LAST_PAYMENT_CHANGE}" | jq '.invoice_payment_change.payload.invoice_payment_status_changed.status'
+)
 if [ \
-  "$(echo "${LAST_CHANGE}" | jq '.invoice_payment_change.payload.invoice_payment_status_changed.status | has(\"failed\")')" != "true" \
+  "$(echo "${LAST_PAYMENT_STATUS}" | jq 'has("failed")')" != "true" \
 ]; then
   err "The payment ${PAYMENT} does not failed."
 fi
