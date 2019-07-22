@@ -139,7 +139,7 @@ def main(argv):
     address = os.environ["CDS"]
     help_promt = "usage: keyring.py {init | unlock | state} [-h | --help]"
     try:
-        opts, args = getopt.getopt(argv, "ha", ["help", "address"])
+        opts, args = getopt.getopt(argv, "ha:", ["help", "address="])
     except getopt.GetoptError:
         six.print_(help_promt)
         exit(2)
