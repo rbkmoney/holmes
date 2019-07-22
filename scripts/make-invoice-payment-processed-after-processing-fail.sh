@@ -52,9 +52,9 @@ if ["${LAST_PAYMENT_CHANGE}" = "null"]; then
 fi
 
 if [ \
-  "$(echo "${LAST_CHANGE}" | jq '.payload.invoice_payment_status_changed.status | has("failed")')" != "true" \
+  "$(echo "${LAST_CHANGE}" | jq '.invoice_payment_change.payload.invoice_payment_status_changed.status | has("failed")')" != "true" \
 ]; then
-  err "The payment ${PAYMENT} does not failed"
+  err "The payment ${PAYMENT} does not failed."
 fi
 
 if ["${ARE_ALL_PAYMENTS_FAILED}" != "true"]; then
