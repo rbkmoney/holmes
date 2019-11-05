@@ -9,7 +9,7 @@
 # schema.
 #
 
-set -e
+set -e -o pipefail
 
 CWD="$(dirname $0)"
 
@@ -18,49 +18,90 @@ source "${CWD}/lib/logging"
 # Actual work is going here
 
 INVOICE="${1}"
-PAYMENT="${2:-1}"
+PAYMENT="${2}"
 
-case ${INVOICE} in
-  ""|"-h"|"--help" )
-    echo -ne "Given ID of an invoice and a payment make it look like the payment processed successfully. "
-    echo -ne "You can bind transaction info if you should, just place a file named "
-    echo -ne "'trx.{invoice_id}.{payment_id}.json' under the feet."
-    echo
-    echo
-    echo -e "Usage: ${SCRIPTNAME} invoice_id [payment_id] [--force]"
-    echo -e "  invoice_id      Invoice ID (string)."
-    echo -e "  payment_id      Payment ID (string), if not specified taken from last invoice event."
-    echo -e "  --force         Force execution even when transaction info is missing."
-    echo -e "  -h, --help      Show this help message."
-    echo
-    echo -e "More information:"
-    echo -e "  https://github.com/rbkmoney/damsel/blob/master/proto/payment_processing.thrift"
-    exit 0
-    ;;
-  * )
-    ;;
-esac
+function usage {
+  echo -ne "Given ID of an invoice and a payment make it look like the payment processed successfully. "
+  echo -ne "You can bind transaction info if you should, just place a file named "
+  echo -ne "'trx.{invoice_id}.{payment_id}.json' under the feet."
+  echo
+  echo
+  echo -e "Usage: ${SCRIPTNAME} invoice_id payment_id [--force]"
+  echo -e "  invoice_id      Invoice ID (string)."
+  echo -e "  payment_id      Payment ID (string)."
+  echo -e "  --force         Force execution even when transaction info is missing."
+  echo -e "  -h, --help      Show this help message."
+  echo
+  echo -e "More information:"
+  echo -e "  https://github.com/rbkmoney/damsel/blob/master/proto/payment_processing.thrift"
+  exit 127
+}
 
+[ -z "${INVOICE}" -o -z "${PAYMENT}" ] && usage
+
+INVOICE_STATE=$(
+  "${CWD}/hellgate/get-invoice-state.sh" "${INVOICE}"
+)
+
+PAYMENT_STATE=$(
+  echo "${INVOICE_STATE}" | jq ".payments[].payment | select(.id == \"${PAYMENT}\")"
+)
+
+if [ \
+  "${INVOICE_STATE}" = "" -o \
+  "${PAYMENT_STATE}" = "" -o \
+  "$(echo "${INVOICE_STATE}" | jq -r '.invoice.status | has("unpaid")')" != "true" -o \
+  "$(echo "${PAYMENT_STATE}" | jq -r '.status | has("pending")')" != "true" \
+]; then
+  err "Invoice looks wrong for this repair scenario"
+fi
 
 LAST_CHANGE=$(
   "${CWD}/hellgate/get-invoice-events.sh" "${INVOICE}" |
     jq '.[-1].payload.invoice_changes[-1].invoice_payment_change'
 )
 
-if [ \
-  "${LAST_CHANGE}" = "null" -o \
-  "$(echo "${LAST_CHANGE}" | jq -r '.payload | has("invoice_payment_cash_flow_changed")')" != "true" \
-]; then
+if [ "${LAST_CHANGE}" = "null" ]; then
   err "Last seen change looks wrong for this repair scenario"
 fi
 
 LAST_PAYMENT="$(echo "${LAST_CHANGE}" | jq -r '.id')"
-
-if [ "$(echo "${LAST_CHANGE}" | jq -r '.id')" != "${PAYMENT}" ]; then
+if [ "${LAST_PAYMENT}" != "${PAYMENT}" ]; then
   err "Last seen change related to another payment with id $(em "${LAST_PAYMENT}")"
 fi
 
-TRXCHANGE=
+if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload | has("invoice_payment_cash_flow_changed")')" == "true" ]; then
+
+SESSION_CHANGE=$(cat <<END
+  {
+    "invoice_payment_change": {
+      "id": "${PAYMENT}",
+      "payload": {
+        "invoice_payment_session_change": {
+          "target": {
+            "processed": []
+          },
+          "payload": {
+            "session_started": []
+          }
+        }
+      }
+    }
+  },
+END
+)
+
+else
+
+if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_started")')" == "true" ]; then
+  SESSION_CHANGE=""
+else
+  err "Last seen change looks wrong for this repair scenario"
+fi
+
+fi
+
+TRXCHANGE=""
 TRXFILE="trx.${INVOICE}.${PAYMENT}.json"
 
 if [ -f "${TRXFILE}" ]; then
@@ -99,21 +140,7 @@ fi
 # finished successfully.
 CHANGES=$(cat <<END
   [
-    {
-      "invoice_payment_change": {
-        "id": "${PAYMENT}",
-        "payload": {
-          "invoice_payment_session_change": {
-            "target": {
-              "processed": []
-            },
-            "payload": {
-              "session_started": []
-            }
-          }
-        }
-      }
-    },
+    ${SESSION_CHANGE}
     ${TRXCHANGE}
     {
       "invoice_payment_change": {
