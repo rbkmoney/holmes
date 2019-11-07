@@ -63,10 +63,12 @@ CHANGES=$(cat <<END
             "payload": {
               "session_finished": {
                 "result": {
-                  "failure": {
+                  "failed": {
                     "failure": {
-                      "code": "authorization_failed",
-                      "reason": "${REASON}"
+                      "failure": {
+                        "code": "authorization_failed",
+                        "reason": "${REASON}"
+                      }
                     }
                   }
                 }
