@@ -14,6 +14,7 @@ source "${CWD}/lib/logging"
 # Actual work is going here
 
 INVOICE="${1}"
+REASON="${2:-Manually captured payment}"
 
 case ${INVOICE} in
   ""|"-h"|"--help" )
@@ -21,8 +22,9 @@ case ${INVOICE} in
     echo -ne "attempt."
     echo
     echo
-    echo -e "Usage: ${SCRIPTNAME} invoice_id"
+    echo -e "Usage: ${SCRIPTNAME} invoice_id [reason]"
     echo -e "  invoice_id      Invoice ID (string)."
+    echo -e "  reason          Reason for manually reconstructed session failure (string)."
     echo -e "  -h, --help      Show this help message."
     echo
     echo -e "More information:"
@@ -61,7 +63,14 @@ CHANGES=$(cat <<END
             "payload": {
               "session_finished": {
                 "result": {
-                  "failed": []
+                  "failed": {
+                    "failure": {
+                      "failure": {
+                        "code": "authorization_failed",
+                        "reason": "${REASON}"
+                      }
+                    }
+                  }
                 }
               }
             }
