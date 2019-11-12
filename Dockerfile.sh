@@ -16,7 +16,7 @@ ENV THRIFT_PORT=8022 \
 COPY ./damsel/proto    /opt/holmes/damsel/proto
 COPY ./cds_proto/proto /opt/holmes/cds_proto/proto
 COPY ./scripts         /opt/holmes/scripts
-#COPY ./lib/scripts     /opt/holmes/scripts
+COPY ./lib/scripts     /opt/holmes/scripts
 CMD epmd
 # A bit of magic below to get a proper branch name
 # even when the HEAD is detached (Hey Jenkins!
