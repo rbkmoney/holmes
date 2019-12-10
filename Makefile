@@ -29,6 +29,8 @@ all: submodules
 
 submodules:
 	@if git submodule status | egrep -q '^[-]|^[+]'; then git submodule update --init; fi
+	mkdir bender-proto/proto/proto
+	cp msgpack-proto/proto/msgpack.thrift bender-proto/proto/proto/msgpack.thrift
 
 lib:
 	$(MAKE) -C lib
