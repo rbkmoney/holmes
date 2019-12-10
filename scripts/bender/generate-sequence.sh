@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -eo pipefail
+set -o errexit
+set -o pipefail
 
 CWD="$(dirname $0)"
 SCRIPTNAME=$(basename $0)
