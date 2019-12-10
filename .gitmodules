@@ -17,3 +17,9 @@
 	path = cds_proto
 	url = git@github.com:rbkmoney/cds-proto.git
 	branch = master
+[submodule "bender-proto"]
+	path = bender-proto
+	url = git@github.com:rbkmoney/bender-proto.git
+[submodule "msgpack-proto"]
+	path = msgpack-proto
+	url = git@github.com:rbkmoney/msgpack-proto.git
