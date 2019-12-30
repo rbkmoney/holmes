@@ -11,7 +11,7 @@ get_state () {
     "${WOORL[@]:-woorl}" \
         -s "${DAMSEL}/proto/payment_processing.thrift" \
         "http://${HELLGATE:-hellgate}:8022/v1/processing/invoicing" \
-        Invoicing Get "$1" "$2"
+        Invoicing Get "$1" "$2" "{}"
 }
 
 case "$1" in
