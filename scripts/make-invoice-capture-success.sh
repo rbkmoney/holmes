@@ -8,6 +8,8 @@ set -e
 
 CWD="$(dirname $0)"
 
+source "${CWD}/lib/logging"
+
 INVOICE="${1}"
 
 case ${INVOICE} in
@@ -38,7 +40,7 @@ TARGET=$(echo "${SESSION}" | jq -r '.target')
 if [ \
   "${PAYMENT}" = "null" -o \
   "$(echo "${TARGET}" | jq -r '.captured')" = "null" -o \
-  "$(echo "${SESSION}" | jq -r '.payload.session_started')" = "null" \
+  "$(echo "${SESSION}" | jq -r '.payload.session_finished')" != "null" \
 ]; then
   err "Last seen change looks wrong for this repair scenario"
 fi
