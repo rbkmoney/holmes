@@ -30,7 +30,6 @@ function usage {
   echo -e "  invoice_id      Invoice ID (string)."
   echo -e "  payment_id      Payment ID (string)."
   echo -e "  --force         Force execution even when transaction info is missing."
-  echo -e "  --suspended     Force execution even when payment session suspended."
   echo -e "  -h, --help      Show this help message."
   echo
   echo -e "More information:"
@@ -93,17 +92,11 @@ END
 )
 
 else
-
-if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_started")')" == "true" ]; then
-  SESSION_CHANGE=""
-else
-  if [ "${4}" == "--suspended" ] && ["$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_suspended")')" == "true"]; then
+  if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_finished")')" != "true" ]; then
     SESSION_CHANGE=""
   else
     err "Last seen change looks wrong for this repair scenario"
   fi
-fi
-
 fi
 
 TRXCHANGE=""
