@@ -92,7 +92,10 @@ END
 )
 
 else
-  if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_finished")')" != "true" ]; then
+
+  if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_started")')" == "true" ] ||
+     ["$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_suspended")')" == "true"]; then
+
     SESSION_CHANGE=""
   else
     err "Last seen change looks wrong for this repair scenario"
