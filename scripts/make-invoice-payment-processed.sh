@@ -93,8 +93,7 @@ END
 
 else
 
-  if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_started")')" == "true" ] ||
-     ["$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_suspended")')" == "true"]; then
+  if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_finished")')" != "true" ]; then
 
     SESSION_CHANGE=""
   else
