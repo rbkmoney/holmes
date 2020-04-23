@@ -95,7 +95,7 @@ END
 
 else
 
-  if [ $SESSION != "null" ] &&
+  if [ "$(echo "${SESSION}")" != "null" ] &&
      [ "$(echo "${SESSION}" | jq -r '.payload | has("session_finished")')" != "true" ]; then
     SESSION_CHANGE=""
   else
