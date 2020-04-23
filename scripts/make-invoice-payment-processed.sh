@@ -61,6 +61,8 @@ LAST_CHANGE=$(
     jq '.[-1].payload.invoice_changes[-1].invoice_payment_change'
 )
 
+SESSION=$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change')
+
 if [ "${LAST_CHANGE}" = "null" ]; then
   err "Last seen change looks wrong for this repair scenario"
 fi
@@ -93,12 +95,12 @@ END
 
 else
 
-if [ "$(echo "${LAST_CHANGE}" | jq -r '.payload.invoice_payment_session_change.payload | has("session_started")')" == "true" ]; then
-  SESSION_CHANGE=""
-else
-  err "Last seen change looks wrong for this repair scenario"
-fi
-
+  if [ $SESSION != "null" ] &&
+     [ "$(echo "${SESSION}" | jq -r '.payload | has("session_finished")')" != "true" ]; then
+    SESSION_CHANGE=""
+  else
+    err "Last seen change looks wrong for this repair scenario"
+  fi
 fi
 
 TRXCHANGE=""
