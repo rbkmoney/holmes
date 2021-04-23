@@ -23,3 +23,6 @@
 [submodule "msgpack-proto"]
 	path = msgpack-proto
 	url = git@github.com:rbkmoney/msgpack-proto.git
+[submodule "binbase-proto"]
+	path = binbase-proto
+	url = git@github.com:rbkmoney/binbase-proto.git
