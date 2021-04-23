@@ -15,6 +15,7 @@ ENV THRIFT_PORT=8022 \
     PROXY_PIMP=pimp
 COPY ./damsel/proto    /opt/holmes/damsel/proto
 COPY ./cds_proto/proto /opt/holmes/cds_proto/proto
+COPY ./binbase-proto/proto /opt/holmes/binbase-proto/proto
 COPY ./scripts         /opt/holmes/scripts
 COPY ./lib/scripts     /opt/holmes/scripts
 CMD epmd
