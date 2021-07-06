@@ -28,4 +28,4 @@
 	url = git@github.com:rbkmoney/binbase-proto.git
 [submodule "limiter-proto"]
 	path = limiter-proto
-	url = https://github.com/rbkmoney/limiter-proto.git
+	url = git@github.com:rbkmoney/limiter-proto.git
