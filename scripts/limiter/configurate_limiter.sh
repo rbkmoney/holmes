@@ -45,7 +45,7 @@ while true; do
   case "$1" in
     --help                    )  usage ;;
     --set-body-currency       )  BODY_TYPE=",\"body_type\":{\"cash\": {\"currency\": \"${2}\"}}" ; shift 2 ;;
-    --set-body-amount         )  BODY_TYPE=",\"body_type\":{\"amount\": {}}"                     ; shift 2 ;;
+    --set-body-amount         )  BODY_TYPE=",\"body_type\":{\"amount\": {}}"                     ; shift 1 ;;
     --subtraction             )  BEHAVIOUR=", \"op_behaviour\": {\"invoice_payment_refund\": {\"subtraction\": {}}}" ; shift 1 ;;
     --                        ) shift 1 ; break ;;
     *                         ) break ;;
@@ -53,14 +53,11 @@ while true; do
 done
 
 ID="${1}"
-[ -z "${ID}" ] && usage
 STARTED_AT="${2}"
-[ -z "${STARTED_AT}" ] && usage
 NAME="${3}"
-[ -z "${NAME}" ] && usage
 DESCRIPTION="${4}"
-[ -z "${DESCRIPTION}" ] && usage
 
+[ -z "$ID" -o -z "$STARTED_AT" -o -z "$NAME" -o -z "$DESCRIPTION" ] && usage
 
 JSON=$(cat <<END
   {
