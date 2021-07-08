@@ -13,18 +13,18 @@ source "${CWD}/../lib/logging"
 
 USAGE=$(cat <<EOF
 
-  Create configuration usage in limit counting.
-  Usage: ${SCRIPTNAME}  [--set-body-currency CUR | --set-body-amount] --subtraction id started_at name description
-    id                        Limit config ID (string)
-    started_at                Timestamp (RFC3339 timestamp) Example: \"2021-07-06T01:02:03Z\"
-    name                      Limit configuration name (string)
-    description               Limit description (string)
+  $(em Create configuration usage in limit counting.)
+  Usage: ${SCRIPTNAME} [--set-body-currency CUR | --set-body-amount] --subtraction id started_at name description
+    $(em id)                        Limit config ID (string)
+    $(em started_at)                Timestamp (RFC3339 timestamp) Example: \"2021-07-06T01:02:03Z\"
+    $(em name)                      Limit configuration name (string)
+    $(em description)               Limit description (string)
 
     OPTIONAL:
 
-    --set-body-currency       Set limit body type currency. Body type currency(ISO 4217)
-    --set-body-amount         Set limit body type amount
-    --subtraction             Limiter behaviour when process payment refund. After refund limit will decrease on refund amount.
+    $(em --set-body-currency)       Set limit body type currency. Body type currency(ISO 4217)
+    $(em --set-body-amount)         Set limit body type amount
+    $(em --subtraction)             Limiter behaviour when process payment refund. After refund limit will decrease on refund amount.
 
   More information:
     https://github.com/rbkmoney/limiter-proto/blob/master/proto/configurator.thrift
@@ -32,11 +32,11 @@ EOF
 )
 
 function usage {
-    echo "${USAGE}"
+    echo -e "${USAGE}"
     exit 127
 }
 
-TEMP=$(getopt -o "" --long help,set-body-currency:,set-body-amount,subtraction -n "${SCRIPTNAME}" -- "$@")
+TEMP=$(getopt -o "" --longoptions help,set-body-currency:,set-body-amount,subtraction -n "${SCRIPTNAME}" -- "$@")
 [ $? != 0 ] && usage
 
 eval set -- "${TEMP}"
