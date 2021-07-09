@@ -22,9 +22,9 @@ USAGE=$(cat <<EOF
 
     OPTIONAL:
 
-    $(em --set-body-currency)       Set limit body type currency. Body type currency(ISO 4217)
-    $(em --set-body-amount)         Set limit body type amount
-    $(em --subtraction)             Limiter behaviour when process payment refund. After refund limit will decrease on refund amount.
+    $(em "--set-body-currency string")  Set limit body type currency. Body type currency(ISO 4217)
+    $(em --set-body-amount)             Set limit body type amount
+    $(em --subtraction)                 Limiter behaviour when process payment refund. After refund limit will decrease on refund amount.
 
   More information:
     https://github.com/rbkmoney/limiter-proto/blob/master/proto/configurator.thrift
@@ -32,14 +32,14 @@ EOF
 )
 
 function usage {
-    echo -e "${USAGE}"
+    echo -e "$USAGE"
     exit 127
 }
 
-TEMP=$(getopt -o "" --longoptions help,set-body-currency:,set-body-amount,subtraction -n "${SCRIPTNAME}" -- "$@")
+TEMP=$(getopt -o "" --longoptions help,set-body-currency:,set-body-amount,subtraction -n "$SCRIPTNAME" -- "$@")
 [ $? != 0 ] && usage
 
-eval set -- "${TEMP}"
+eval set -- "$TEMP"
 
 while true; do
   case "$1" in
@@ -52,7 +52,7 @@ while true; do
   esac
 done
 
-ID="${1}"
+ID="$1"
 STARTED_AT="${2}"
 NAME="${3}"
 DESCRIPTION="${4}"
@@ -76,4 +76,4 @@ END
 "${WOORL[@]:-woorl}" \
     -s "${LIMITER_PROTO}/proto/configurator.thrift" \
     "http://${LIMITER:-limiter}:8022/v1/configurator" \
-    Configurator Create "${JSON}"
+    Configurator Create "$JSON"
