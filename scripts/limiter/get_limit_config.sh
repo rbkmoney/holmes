@@ -36,6 +36,6 @@ ID="$1"
 "${WOORL[@]:-woorl}" \
     -s "${LIMITER_PROTO}/proto/configurator.thrift" \
     "http://${LIMITER:-limiter}:8022/v1/configurator" \
-    Configurator Get "$ID"
+    Configurator Get "\"$ID\""
 
 
