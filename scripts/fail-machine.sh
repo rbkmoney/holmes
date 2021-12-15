@@ -44,6 +44,6 @@ END
 )
 
 "${WOORL[@]:-woorl}" -s "${MGPROTO}/proto/state_processing.thrift" \
-    "http://${MACHINEGUN:-machinegun}:8022/v1/automaton" \
+    "http://${MACHINEGUN:-machinegun}:${MACHINEGUN_PORT:-8022}/v1/automaton" \
     Automaton Call "${MACHINEDESC}" "${CALLARGS}" \
       | grep -sqF 'MachineFailed'

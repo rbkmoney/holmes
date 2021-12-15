@@ -39,7 +39,7 @@ while true; do
   case "$1" in
     --force        ) PARAMS='{"validate_transitions":false}'                            ; shift 1 ;;
     --set-timeout  ) ACTION="{\"timer\":{\"set_timer\":{\"timer\":{\"timeout\":$2}}}}"  ; shift 2 ;;
-    --set-deadline ) ACTION="{\"timer\":{\"set_timer\":{\"timer\":{\"deadline\":$2}}}}" ; shift 2 ;;
+    --set-deadline ) ACTION="{\"timer\":{\"set_timer\":{\"timer\":{\"deadline\":\"$2\"}}}}" ; shift 2 ;;
     --unset-timer  ) ACTION="{\"timer\":{\"unset_timer\":{}}}"                          ; shift 1 ;;
     --             ) shift 1 ; break ;;
     *              ) break ;;
