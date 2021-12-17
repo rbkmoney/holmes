@@ -5,6 +5,8 @@
 
 set -e
 
+CWD="$(dirname ${0})"
+
 INVOICE="${1}"
 PAYMENT="${2:-1}"
 

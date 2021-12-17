@@ -28,7 +28,7 @@ PLANID="${1}"
 BATCH="${2}"
 [ -z "${BATCH}" ]  && usage
 
-ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
+ACCOUNTER="http://${SHUMWAY:-shumway}:${SHUMWAY_PORT:-8022}/accounter"
 
 "${WOORL[@]:-woorl}" -s "${DAMSEL}/proto/accounter.thrift" \
     "${ACCOUNTER}" Accounter Hold \

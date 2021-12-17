@@ -31,7 +31,7 @@ PLANID="${1}"
 BATCHID="${2}"
 [ -z "${BATCHID}" ] && usage
 
-ACCOUNTER="http://${SHUMWAY:-shumway}:8022/accounter"
+ACCOUNTER="http://${SHUMWAY:-shumway}:${SHUMWAY_PORT:-8022}/accounter"
 
 "${CWD}/get-posting-plan.sh" "${PLANID}" | \
       jq ".batch_list[] | select(.id == ${BATCHID})"
