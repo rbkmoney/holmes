@@ -76,4 +76,4 @@ END
 "${WOORL[@]:-woorl}" \
     -s "${LIMITER_PROTO}/proto/configurator.thrift" \
     "http://${LIMITER:-limiter}:8022/v1/configurator" \
-    Configurator Create "$JSON"
+    Configurator CreateLegacy "$JSON"
